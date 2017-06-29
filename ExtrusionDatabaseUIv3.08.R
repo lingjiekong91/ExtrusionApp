@@ -11,7 +11,6 @@ library(bootstrap)
 library(jpeg)
 library(ggplot2)
 library(DT)
-#lingjie make a new change
 
 
 #Creating variables across all sessions
