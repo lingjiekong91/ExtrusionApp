@@ -11,6 +11,7 @@ library(bootstrap)
 library(jpeg)
 library(ggplot2)
 library(DT)
+library(stringr)
 #Change the search bar size to show the entire cell.
 
 
@@ -42,9 +43,128 @@ resin_data <- read.csv(resin_pathfile, header = TRUE, stringsAsFactors = FALSE,
                        check.names = FALSE)
 screw_data <- read.csv(screw_pathfile, header = TRUE, stringsAsFactors = FALSE, 
                        check.names = FALSE)
+temp=as.data.frame(matrix(0,nrow=nrow(single_tari_data),ncol=2))
+colnames(temp)=c("Start Date","Start Time")
+temp[,1:2]=str_split_fixed(single_tari_data$`Start Time`,' ',2)
+temp[,1]=as.Date(temp[,1],"%m/%d/%Y",origin="1899-12-30")
+single_tari_data=cbind(single_tari_data[,1:which(colnames(single_tari_data)=="Start Time")-1],
+                       temp,single_tari_data[,(which(colnames(single_tari_data)=="Start Time")+1):ncol(single_tari_data)])
 
 
 # Define UI for application that draws a histogram
+ui <- fluidPage(
+  
+  # Application title
+  
+  titlePanel("Extrusion Application"),
+  
+  tabsetPanel(id = "application",
+              tabPanel('Part Catalog',
+                       sidebarPanel(
+                         conditionalPanel(
+                           'input.dataset === "Single Extrusion PPS Data"',
+                           checkboxGroupInput('show_vars1', 'Columns to Show:',
+                                              choices = names(single_pps_data),
+                                              selected = c("Part Number", "Part Description", 
+                                                           "Resin Number", "Resin Description",
+                                                           "Die Size", "Tip Size",
+                                                           "Inner Diameter (in)", "Outer Diameter (in)",
+                                                           "Wall Thickness (in)", "Length (in)")
+                           )
+                         ),
+                         conditionalPanel(
+                           'input.dataset === "Multi-Layered Exutrusion PPS Data"',
+                           checkboxGroupInput('show_vars2', 'Columns to Show:',
+                                              c("Part Number", "Part Description", 
+                                                "Resin Number", "Resin Description",
+                                                "Die Size", "Tip Size",
+                                                "Inner Diameter (in)", "Outer Diameter (in)",
+                                                "Inner Wall Thickness (in)", "Middle Wall Thickness (in)",
+                                                "Outer Wall Thickness (in)",
+                                                "Total Wall Thickness (in)", "Total Length (in)")
+                                              
+                           )
+                         ),
+                         conditionalPanel(
+                           'input.dataset === "Tapered Extrusion PPS Data"',
+                           checkboxGroupInput('show_vars3', 'Columns to Show:',
+                                              choices = names(tapered_pps_data), 
+                                              c("Part Number", "Part Description", 
+                                                "Resin Number", "Resin Description",
+                                                "Die Size", "Tip Size",
+                                                "Proximal Inner Diameter (in)", "Proximal Inner Diameter (in)",
+                                                "Proximal Wall Thickness (in)",
+                                                "Distal Inner Diameter (in)", "Distal Outer Diameter (in)",
+                                                "Distal Wall Thickness (in)",
+                                                "Proximal Length (in)", "Transition Length (in)", 
+                                                "Transition Length (in)", "Total Length (in)")
+                           )
+                         )
+                       ),
+                       
+                       mainPanel(
+                         tabsetPanel(
+                           id = 'dataset',
+                           tabPanel('Single Extrusion PPS Data', DT::dataTableOutput('mytable1')),
+                           tabPanel('Multi-Layered Exutrusion PPS Data', DT::dataTableOutput('mytable2')),
+                           tabPanel('Tapered Extrusion PPS Data', DT::dataTableOutput('mytable3'))
+                         )
+                       ) #end mainPanel
+              ),#end tabPanel
+              
+              tabPanel('Output',
+                       sidebarPanel(
+                         conditionalPanel(
+                           'input.output_dataset === "MES Data"',
+                           checkboxGroupInput('show_vars4', 'Columns to Show:',
+                                              choices = names(single_tari_data),
+                                              selected = names(single_tari_data)
+                           )
+                         )
+                       ),#end sidebarPanel
+                       
+                       mainPanel(
+                         tabsetPanel(
+                           id = 'output_dataset',
+                           tabPanel('MES Data', DT::dataTableOutput('mytable4'))
+                         )
+                       ) #end mainPanel
+              ), #end tabPanel for 'Output'
+              
+              tabPanel('Extra',
+                       sidebarPanel(
+                         
+                         conditionalPanel(
+                           'input.extra_dataset === "Resin Data"',
+                           checkboxGroupInput('show_vars5', 'Columns to Show:',
+                                              choices = names(resin_data),
+                                              selected = names(resin_data)
+                           )
+                         ),
+                         conditionalPanel(
+                           'input.extra_dataset === "Screw Data"',
+                           checkboxGroupInput('show_vars6', 'Columns to Show:',
+                                              choices = names(screw_data),
+                                              selected = names(screw_data)
+                           )
+                         )
+                       ),#end sidebarPanel
+                       
+                       mainPanel(
+                         tabsetPanel(
+                           id = 'extra_dataset',
+                           tabPanel('Resin Data', DT::dataTableOutput('mytable5')),
+                           tabPanel('Screw Data', DT::dataTableOutput('mytable6'))
+                         )
+                       ) #end mainPanel
+              ) #end tabPanel for 'Extra'
+              
+  )#end tabsetPanel for part catalog
+  
+  
+) #end fluidPage
+
+
 
 
 server <- function(input, output, session) {
@@ -59,7 +179,12 @@ server <- function(input, output, session) {
     DT::datatable(single_pps_data[, input$show_vars1], 
                   options = list(orderClasses = TRUE, 
                                  columnDefs = list(list(className = 'dt-center', 
-                                                        targets = "_all"))), 
+                                                        targets = "_all"
+                                                        )
+                                                   ),
+                                 scrollX=TRUE,
+                                 scrollY=600,
+                                 autoWidth=TRUE), 
                   filter = "top")
   })
   
@@ -67,7 +192,12 @@ server <- function(input, output, session) {
     DT::datatable(multi_pps_data[, input$show_vars2], 
                   options = list(orderClasses = TRUE, 
                                  columnDefs = list(list(className = 'dt-center', 
-                                                        targets = "_all"))), 
+                                                        targets = "_all"
+                                                        )
+                                                   ),
+                                 scrollX=TRUE,
+                                 scrollY=600,
+                                 autoWidth=TRUE), 
                   filter = "top")
   })
   
@@ -75,7 +205,12 @@ server <- function(input, output, session) {
     DT::datatable(tapered_pps_data[, input$show_vars3], 
                   options = list(orderClasses = TRUE, 
                                  columnDefs = list(list(className = 'dt-center', 
-                                                        targets = "_all"))), 
+                                                        targets = "_all"
+                                                        )
+                                                   ),
+                                 scrollX=TRUE,
+                                 scrollY=600,
+                                 autoWidth=TRUE), 
                   filter = "top")
   })
   
@@ -83,7 +218,13 @@ server <- function(input, output, session) {
     DT::datatable(single_tari_data[, input$show_vars4], 
                   options = list(orderClasses = TRUE, 
                                  columnDefs = list(list(className = 'dt-center', 
-                                                        targets = "_all"))), 
+                                                      targets = "_all"
+                                                        )
+                                                    ),
+
+                                 scrollX=TRUE,
+                                 scrollY=600,
+                                 autoWidth=TRUE), 
                   filter = "top")
   })
   
@@ -91,7 +232,12 @@ server <- function(input, output, session) {
     DT::datatable(resin_data[, input$show_vars5], 
                   options = list(orderClasses = TRUE, 
                                  columnDefs = list(list(className = 'dt-center', 
-                                                        targets = "_all"))), 
+                                                        targets = "_all"
+                                                        )
+                                                   ),
+                                 scrollX=TRUE,
+                                 scrollY=600,
+                                 autoWidth=TRUE), 
                   filter = "top")
   })
   
@@ -99,7 +245,12 @@ server <- function(input, output, session) {
     DT::datatable(screw_data[, input$show_vars6], 
                   options = list(orderClasses = TRUE, 
                                  columnDefs = list(list(className = 'dt-center', 
-                                                        targets = "_all"))), 
+                                                        targets = "_all"
+                                                        )
+                                                   ),
+                                 scrollX=TRUE,
+                                 scrollY=600,
+                                 autoWidth=TRUE), 
                   filter = "top")
   })
   
