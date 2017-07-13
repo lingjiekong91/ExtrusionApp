@@ -49,7 +49,7 @@ temp[,1:2]=str_split_fixed(single_tari_data$`Start Time`,' ',2)
 temp[,1]=as.Date(temp[,1],"%m/%d/%Y",origin="1899-12-30")
 single_tari_data=cbind(single_tari_data[,1:which(colnames(single_tari_data)=="Start Time")-1],
                        temp,single_tari_data[,(which(colnames(single_tari_data)=="Start Time")+1):ncol(single_tari_data)])
-
+#Find the earliest date and latest date of start time in MES
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -126,7 +126,45 @@ ui <- fluidPage(
                        mainPanel(
                          tabsetPanel(
                            id = 'output_dataset',
-                           tabPanel('MES Data', DT::dataTableOutput('mytable4'))
+                           tabPanel('MES Data', 
+                                    fluidRow(
+                                      column(2,
+                                             selectInput("MN",
+                                                         "Material Number",
+                                                         c("All",
+                                                           unique(as.character(single_tari_data$`Material Number`))))
+                                      ),
+                                      column(2,
+                                             selectInput("Batch",
+                                                         "SAP Batch Number",
+                                                         c("All",
+                                                           unique(as.character(single_tari_data$`SAP Batch Number`))))
+                                      ),
+                                      column(2,
+                                             selectInput("SWR",
+                                                         "SWR Number",
+                                                         c("All",
+                                                           unique(as.character(single_tari_data$`SWR Number`))))
+                                      ),
+                                      column(2,
+                                             selectInput("OperatorID",
+                                                         "Operator ID",
+                                                         c("All",
+                                                           unique(as.character(single_tari_data$`Operator ID`))))
+                                      ),
+                                      column(3,
+                                             dateRangeInput("Start",
+                                                            "Start Date Range",
+                                                            start=Sys.Date()-2,end=Sys.Date()
+                                             )
+                                      )
+                                      
+                                    ),
+                                    # Create a new row for the table.
+                                    fluidRow(
+                                      DT::dataTableOutput("mytable4")
+                                    )
+                           )
                          )
                        ) #end mainPanel
               ), #end tabPanel for 'Output'
@@ -183,7 +221,7 @@ server <- function(input, output, session) {
                                                         )
                                                    ),
                                  scrollX=TRUE,
-                                 scrollY=600,
+                                 scrollY=500,
                                  autoWidth=TRUE), 
                   filter = "top")
   })
@@ -196,7 +234,7 @@ server <- function(input, output, session) {
                                                         )
                                                    ),
                                  scrollX=TRUE,
-                                 scrollY=600,
+                                 scrollY=500,
                                  autoWidth=TRUE), 
                   filter = "top")
   })
@@ -209,25 +247,37 @@ server <- function(input, output, session) {
                                                         )
                                                    ),
                                  scrollX=TRUE,
-                                 scrollY=600,
+                                 scrollY=500,
                                  autoWidth=TRUE), 
                   filter = "top")
   })
   
   output$mytable4 <- DT::renderDataTable({
-    DT::datatable(single_tari_data[, input$show_vars4], 
-                  options = list(orderClasses = TRUE, 
-                                 columnDefs = list(list(className = 'dt-center', 
-                                                      targets = "_all"
-                                                        )
-                                                    ),
-
-                                 scrollX=TRUE,
-                                 scrollY=600,
-                                 autoWidth=TRUE), 
-                  filter = "top")
+    DT::datatable({
+      data<-single_tari_data[,input$show_vars4]
+      if(input$MN!="All"){
+        data<-data[data$`Material Number`==input$MN,]
+      }
+      if(input$Batch!="All"){
+        data<-single_tari_data[single_tari_data$`SAP Batch Number`==input$Batch,]
+      }
+      if(input$SWR!="All"){
+        data<-single_tari_data[single_tari_data$`SWR Number`==input$SWR,]
+      }
+      if(input$OperatorID!="All"){
+        data<-single_tari_data[single_tari_data$`Operator ID`==input$OperatorID,]
+      }
+      data
+    },
+        options = list(orderClasses = TRUE, 
+                       columnDefs = list(list(className = 'dt-center', 
+                                              targets = "_all"
+                                              )
+                                         ),
+                       scrollX=TRUE,
+                       scrollY=500,
+                       autoWidth=TRUE) )
   })
-  
   output$mytable5 <- DT::renderDataTable({
     DT::datatable(resin_data[, input$show_vars5], 
                   options = list(orderClasses = TRUE, 
@@ -236,7 +286,7 @@ server <- function(input, output, session) {
                                                         )
                                                    ),
                                  scrollX=TRUE,
-                                 scrollY=600,
+                                 scrollY=500,
                                  autoWidth=TRUE), 
                   filter = "top")
   })
@@ -249,7 +299,7 @@ server <- function(input, output, session) {
                                                         )
                                                    ),
                                  scrollX=TRUE,
-                                 scrollY=600,
+                                 scrollY=500,
                                  autoWidth=TRUE), 
                   filter = "top")
   })
