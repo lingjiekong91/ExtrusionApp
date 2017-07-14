@@ -101,15 +101,55 @@ ui <- fluidPage(
                            )
                          )
                        ),
-                       
                        mainPanel(
                          tabsetPanel(
                            id = 'dataset',
-                           tabPanel('Single Extrusion PPS Data', DT::dataTableOutput('mytable1')),
+                           tabPanel('Single Extrusion PPS Data', 
+                                    fluidRow(
+                                      column(2,
+                                             selectInput("PN","Part Number",
+                                                         c("All",unique(as.character(single_pps_data$`Part Number`))))
+                                      ),
+                                      column(3,
+                                             selectInput("PD","Part Description",
+                                                         c("All",unique(as.character(single_pps_data$`Part Description`))))
+                                      ),
+                                      column(2,
+                                             selectInput("RN","Resin Number",
+                                                         c("All",unique(as.character(single_pps_data$`Resin Number`))))
+                                      ),
+                                      column(2,
+                                             selectInput("RD","Resin Description",
+                                                         c("All",unique(as.character(single_pps_data$`Resin Description`))))
+                                      ),
+                                      column(2,
+                                             selectInput("PPSN","PPS Number",
+                                                         c("All",unique(as.character(single_pps_data$`PPS Number`))))
+                                      ),
+                                      column(2,
+                                             selectInput("DS","Die Size(in)",
+                                                         c("All",unique(as.character(single_pps_data$`Die Size (in)`))))
+                                      ),
+                                      column(2,
+                                             selectInput("TS","Tip Size(in)",
+                                                         c("All",unique(as.character(single_pps_data$`Tip Size (in)`))))
+                                      ),
+                                      column(2,
+                                             selectInput("SP","Screw Print",
+                                                         c("All",unique(as.character(single_pps_data$`Screw Print`))))
+                                      )
+                                      
+                                      
+                                    ),
+                                    fluidRow(
+                                      DT::dataTableOutput("mytable1"),
+                                      verbatimTextOutput("Summary1")
+                                    )
+                           ),
                            tabPanel('Multi-Layered Exutrusion PPS Data', DT::dataTableOutput('mytable2')),
                            tabPanel('Tapered Extrusion PPS Data', DT::dataTableOutput('mytable3'))
                          )
-                       ) #end mainPanel
+                       )#end mainPanel
               ),#end tabPanel
               
               tabPanel('Output',
@@ -214,16 +254,36 @@ server <- function(input, output, session) {
   
   
   output$mytable1 <- DT::renderDataTable({
-    DT::datatable(single_pps_data[, input$show_vars1], 
-                  options = list(orderClasses = TRUE, 
-                                 columnDefs = list(list(className = 'dt-center', 
-                                                        targets = "_all"
-                                                        )
-                                                   ),
-                                 scrollX=TRUE,
-                                 scrollY=500,
-                                 autoWidth=TRUE), 
-                  filter = "top")
+    DT::datatable({
+      data1<-single_pps_data[, input$show_vars1]
+      if(input$PN!="All"){
+        data1<-data1[data1$`Part Number`==input$PN,]
+      }
+      if(input$PD!="All"){
+        data1<-data1[data1$`Part Description`==input$PD,]
+      }
+      if(input$RN!="All"){
+        data1<-data1[data1$`Resin Number`==input$RN,]
+      }
+      if(input$RD!="All"){
+        data1<-data1[data1$`Resin Descriptionr`==input$RD,]
+      }
+      if(input$PPSN!="All"){
+        data1<-data1[data1$`PPS Number`==input$PPSN,]
+      }
+      data1
+    },
+    options = list(orderClasses = TRUE, 
+                   columnDefs = list(list(className = 'dt-center', 
+                                          targets = "_all"
+                   )
+                   ),
+                   scrollX=TRUE,
+                   scrollY=500,
+                   autoWidth=TRUE))
+  })
+  output$Summary1<-renderPrint({
+    input$PN
   })
   
   output$mytable2 <- DT::renderDataTable({
@@ -231,8 +291,8 @@ server <- function(input, output, session) {
                   options = list(orderClasses = TRUE, 
                                  columnDefs = list(list(className = 'dt-center', 
                                                         targets = "_all"
-                                                        )
-                                                   ),
+                                 )
+                                 ),
                                  scrollX=TRUE,
                                  scrollY=500,
                                  autoWidth=TRUE), 
@@ -244,8 +304,8 @@ server <- function(input, output, session) {
                   options = list(orderClasses = TRUE, 
                                  columnDefs = list(list(className = 'dt-center', 
                                                         targets = "_all"
-                                                        )
-                                                   ),
+                                 )
+                                 ),
                                  scrollX=TRUE,
                                  scrollY=500,
                                  autoWidth=TRUE), 
@@ -254,7 +314,7 @@ server <- function(input, output, session) {
   
   output$mytable4 <- DT::renderDataTable({
     DT::datatable({
-      data<-single_tari_data[,input$show_vars4]
+      data<-single_tari_data[single_tari_data$`Material Number`==input$PN,input$show_vars4]
       if(input$MN!="All"){
         data<-data[data$`Material Number`==input$MN,]
       }
@@ -269,22 +329,22 @@ server <- function(input, output, session) {
       }
       data
     },
-        options = list(orderClasses = TRUE, 
-                       columnDefs = list(list(className = 'dt-center', 
-                                              targets = "_all"
-                                              )
-                                         ),
-                       scrollX=TRUE,
-                       scrollY=500,
-                       autoWidth=TRUE) )
+    options = list(orderClasses = TRUE, 
+                   columnDefs = list(list(className = 'dt-center', 
+                                          targets = "_all"
+                   )
+                   ),
+                   scrollX=TRUE,
+                   scrollY=500,
+                   autoWidth=TRUE) )
   })
   output$mytable5 <- DT::renderDataTable({
     DT::datatable(resin_data[, input$show_vars5], 
                   options = list(orderClasses = TRUE, 
                                  columnDefs = list(list(className = 'dt-center', 
                                                         targets = "_all"
-                                                        )
-                                                   ),
+                                 )
+                                 ),
                                  scrollX=TRUE,
                                  scrollY=500,
                                  autoWidth=TRUE), 
@@ -296,8 +356,8 @@ server <- function(input, output, session) {
                   options = list(orderClasses = TRUE, 
                                  columnDefs = list(list(className = 'dt-center', 
                                                         targets = "_all"
-                                                        )
-                                                   ),
+                                 )
+                                 ),
                                  scrollX=TRUE,
                                  scrollY=500,
                                  autoWidth=TRUE), 
