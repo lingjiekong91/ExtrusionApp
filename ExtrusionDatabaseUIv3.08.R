@@ -108,7 +108,7 @@ ui <- fluidPage(
                                     fluidRow(
                         
                                       column(2,
-                                             selectInput("PN","Part Number",
+                                             selectInput("PN","Part Number",multiple=TRUE,
                                                          c("All",unique(as.character(single_pps_data$`Part Number`))))
                                       ),
                                       column(3,
@@ -181,7 +181,7 @@ ui <- fluidPage(
                                       ),
                                       column(1,
                                              selectInput("OS","OD Sort",
-                                                         c("All",unique(as.character(single_pps_data$'OD Sort'))))
+                                                         c("All",unique(as.character(single_pps_data$`OD Sort`))))
                                       ),
                                       column(1,
                                              selectInput("MP","Melt Pump",
@@ -354,70 +354,67 @@ server <- function(input, output, session) {
         data1<-data1[data1$`Die Size (in)`==input$DS,]
       }
       if(input$TS!="All"){
-        data1<-data1[data1$`PPS Number`==input$TS,]
+        data1<-data1[data1$`Tip Size (in)`==input$TS,]
       }
       if(input$SP!="All"){
-        data1<-data1[data1$`PPS Number`==input$SP,]
+        data1<-data1[data1$`Screw Print`==input$SP,]
       }
       if(input$IDI!="All"){
-        data1<-data1[data1$`PPS Number`==input$IDI,]
+        data1<-data1[data1$`Inner Diameter (in)`==input$IDI,]
       }
       if(input$ODI!="All"){
-        data1<-data1[data1$`PPS Number`==input$ODI,]
+        data1<-data1[data1$`Outer Diameter (in)`==input$ODI,]
       }
       if(input$WT!="All"){
-        data1<-data1[data1$`PPS Number`==input$WT,]
+        data1<-data1[data1$`Wall Thickness (in)`==input$WT,]
       }
       if(input$OR!="All"){
-        data1<-data1[data1$`PPS Number`==input$OR,]
+        data1<-data1[data1$`Out of Roundness (in)`==input$OR,]
       }
       if(input$CCT!="All"){
-        data1<-data1[data1$`PPS Number`==input$CCT,]
+        data1<-data1[data1$`Concentricity (in)`==input$CCT,]
       }
       if(input$Length!="All"){
-        data1<-data1[data1$`PPS Number`==input$Length,]
+        data1<-data1[data1$`Length (in)`==input$Length,]
       }
       if(input$PPD!="All"){
-        data1<-data1[data1$`PPS Number`==input$PPD,]
+        data1<-data1[data1$`Perpendicularity (in)`==input$PPD,]
       }
       if(input$NEXIV!="All"){
-        data1<-data1[data1$`PPS Number`==input$NEXIV,]
+        data1<-data1[data1$`NEXIV`==input$NEXIV,]
       }
       if(input$Annealed!="All"){
-        data1<-data1[data1$`PPS Number`==input$Annealed,]
+        data1<-data1[data1$`Annealed`==input$Annealed,]
       }
       if(input$Caliper!="All"){
-        data1<-data1[data1$`PPS Number`==input$Caliper,]
+        data1<-data1[data1$`Caliper`==input$Caliper,]
       }
       if(input$OS!="All"){
-        data1<-data1[data1$`PPS Number`==input$OS,]
+        data1<-data1[data1$`OD Sort`==input$OS,]
       }
       if(input$MP!="All"){
-        data1<-data1[data1$`PPS Number`==input$MP,]
+        data1<-data1[data1$`Melt Pumpr`==input$MP,]
       }
       if(input$HT!="All"){
-        data1<-data1[data1$`PPS Number`==input$HT,]
+        data1<-data1[data1$`Hypo Tip`==input$HT,]
       }
       if(input$SPD!="All"){
-        data1<-data1[data1$`PPS Number`==input$SPD,]
+        data1<-data1[data1$`Sparker Die`==input$SPD,]
       }
       if(input$SLD!="All"){
-        data1<-data1[data1$`PPS Number`==input$SLD,]
+        data1<-data1[data1$`Slicking Die`==input$SLD,]
       }
       if(input$DLN!="All"){
-        data1<-data1[data1$`PPS Number`==input$DLN,]
-      }
-      if(input$OR!="All"){
-        data1<-data1[data1$`PPS Number`==input$OR,]
+        data1<-data1[data1$`Delamination`==input$DLN,]
       }
       if(input$ULT!="All"){
-        data1<-data1[data1$`PPS Number`==input$ULT,]
+        data1<-data1[data1$`Ultrasonic`==input$ULT,]
       }
       if(input$VC!="All"){
-        data1<-data1[data1$`PPS Number`==input$VC,]
+        data1<-data1[data1$`Vacuum Calibration`==input$VC,]
       }
       if(input$IRD!="All"){
-        data1<-data1[data1$`PPS Number`==input$IRD,]
+        data1<-data1[data1$`Irradiated`==input$IRD,]
       }
 
       data1
