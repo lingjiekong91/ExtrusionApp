@@ -106,6 +106,7 @@ ui <- fluidPage(
                            id = 'dataset',
                            tabPanel('Single Extrusion PPS Data', 
                                     fluidRow(
+                        
                                       column(2,
                                              selectInput("PN","Part Number",
                                                          c("All",unique(as.character(single_pps_data$`Part Number`))))
@@ -137,9 +138,87 @@ ui <- fluidPage(
                                       column(2,
                                              selectInput("SP","Screw Print",
                                                          c("All",unique(as.character(single_pps_data$`Screw Print`))))
+                                      ),
+                                      column(2,
+                                             selectInput("IDI","Inner Diameter(in)",
+                                                         c("All",unique(as.character(single_pps_data$`Inner Diameter (in)`))))
+                                      ),
+                                      column(2,
+                                             selectInput("ODI","Out Diameter(in)",
+                                                         c("All",unique(as.character(single_pps_data$`Outer Diameter (in)`))))
+                                      ),
+                                      column(2,
+                                             selectInput("WT","Wall Thickness(in)",
+                                                         c("All",unique(as.character(single_pps_data$`Wall Thickness (in)`))))
+                                      ),
+                                      column(2,
+                                             selectInput("OR","Out of Roundness(in)",
+                                                         c("All",unique(as.character(single_pps_data$`Out of Roundness (in)`))))
+                                      ),
+                                      column(2,
+                                             selectInput("CCT","Concentricity(in)",
+                                                         c("All",unique(as.character(single_pps_data$`Concentricity (in)`))))
+                                      ),
+                                      column(2,
+                                             selectInput("Length","Length(in)",
+                                                         c("All",unique(as.character(single_pps_data$`Length (in)`))))
+                                      ),
+                                      column(2,
+                                             selectInput("PPD","Perpendicularity(in)",
+                                                         c("All",unique(as.character(single_pps_data$`Perpendicularity (in)`))))
+                                      ),
+                                      column(1,
+                                             selectInput("NEXIV","NEXIV",
+                                                         c("All",unique(as.character(single_pps_data$NEXIV))))
+                                      ),
+                                      column(1,
+                                             selectInput("Annealed","Annealed",
+                                                         c("All",unique(as.character(single_pps_data$Annealed))))
+                                      ),
+                                      column(1,
+                                             selectInput("Caliper","Caliper",
+                                                         c("All",unique(as.character(single_pps_data$Caliper))))
+                                      ),
+                                      column(1,
+                                             selectInput("OS","OD Sort",
+                                                         c("All",unique(as.character(single_pps_data$'OD Sort'))))
+                                      ),
+                                      column(1,
+                                             selectInput("MP","Melt Pump",
+                                                         c("All",unique(as.character(single_pps_data$`Melt Pump`))))
+                                      ),
+                                      column(1,
+                                             selectInput("HT","Hypo Tip",
+                                                         c("All",unique(as.character(single_pps_data$`Hypo Tip`))))
+                                      ),
+                                      column(1,
+                                             selectInput("SPD","Spark Die",
+                                                         c("All",unique(as.character(single_pps_data$`Sparker Die`))))
+                                      ),
+                                      column(1,
+                                             selectInput("SLD","Slicking Die",
+                                                         c("All",unique(as.character(single_pps_data$`Slicking Die`))))
+                                      ),
+                                      column(1,
+                                             selectInput("DLN","Delamination",
+                                                         c("All",unique(as.character(single_pps_data$Delamination))))
+                                      ),
+                                      column(1,
+                                             selectInput("OR","Out of Roundness(in)",
+                                                         c("All",unique(as.character(single_pps_data$`Out of Roundness (in)`))))
+                                      ),
+                                      column(1,
+                                             selectInput("ULT","Ultrasonic",
+                                                         c("All",unique(as.character(single_pps_data$Ultrasonic))))
+                                      ),
+                                      column(1,
+                                             selectInput("VC","Vacuum Calibration",
+                                                         c("All",unique(as.character(single_pps_data$`Vacuum Calibration`))))
+                                      ),
+                                      column(1,
+                                             selectInput("IRD","Irradiated",
+                                                         c("All",unique(as.character(single_pps_data$Irradiated))))
                                       )
-                                      
-                                      
                                     ),
                                     fluidRow(
                                       DT::dataTableOutput("mytable1"),
@@ -271,6 +350,76 @@ server <- function(input, output, session) {
       if(input$PPSN!="All"){
         data1<-data1[data1$`PPS Number`==input$PPSN,]
       }
+      if(input$DS!="All"){
+        data1<-data1[data1$`Die Size (in)`==input$DS,]
+      }
+      if(input$TS!="All"){
+        data1<-data1[data1$`PPS Number`==input$TS,]
+      }
+      if(input$SP!="All"){
+        data1<-data1[data1$`PPS Number`==input$SP,]
+      }
+      if(input$IDI!="All"){
+        data1<-data1[data1$`PPS Number`==input$IDI,]
+      }
+      if(input$ODI!="All"){
+        data1<-data1[data1$`PPS Number`==input$ODI,]
+      }
+      if(input$WT!="All"){
+        data1<-data1[data1$`PPS Number`==input$WT,]
+      }
+      if(input$OR!="All"){
+        data1<-data1[data1$`PPS Number`==input$OR,]
+      }
+      if(input$CCT!="All"){
+        data1<-data1[data1$`PPS Number`==input$CCT,]
+      }
+      if(input$Length!="All"){
+        data1<-data1[data1$`PPS Number`==input$Length,]
+      }
+      if(input$PPD!="All"){
+        data1<-data1[data1$`PPS Number`==input$PPD,]
+      }
+      if(input$NEXIV!="All"){
+        data1<-data1[data1$`PPS Number`==input$NEXIV,]
+      }
+      if(input$Annealed!="All"){
+        data1<-data1[data1$`PPS Number`==input$Annealed,]
+      }
+      if(input$Caliper!="All"){
+        data1<-data1[data1$`PPS Number`==input$Caliper,]
+      }
+      if(input$OS!="All"){
+        data1<-data1[data1$`PPS Number`==input$OS,]
+      }
+      if(input$MP!="All"){
+        data1<-data1[data1$`PPS Number`==input$MP,]
+      }
+      if(input$HT!="All"){
+        data1<-data1[data1$`PPS Number`==input$HT,]
+      }
+      if(input$SPD!="All"){
+        data1<-data1[data1$`PPS Number`==input$SPD,]
+      }
+      if(input$SLD!="All"){
+        data1<-data1[data1$`PPS Number`==input$SLD,]
+      }
+      if(input$DLN!="All"){
+        data1<-data1[data1$`PPS Number`==input$DLN,]
+      }
+      if(input$OR!="All"){
+        data1<-data1[data1$`PPS Number`==input$OR,]
+      }
+      if(input$ULT!="All"){
+        data1<-data1[data1$`PPS Number`==input$ULT,]
+      }
+      if(input$VC!="All"){
+        data1<-data1[data1$`PPS Number`==input$VC,]
+      }
+      if(input$IRD!="All"){
+        data1<-data1[data1$`PPS Number`==input$IRD,]
+      }
+
       data1
     },
     options = list(orderClasses = TRUE, 
@@ -285,7 +434,7 @@ server <- function(input, output, session) {
   output$Summary1<-renderPrint({
     input$PN
   })
-  
+        
   output$mytable2 <- DT::renderDataTable({
     DT::datatable(multi_pps_data[, input$show_vars2], 
                   options = list(orderClasses = TRUE, 
@@ -314,7 +463,12 @@ server <- function(input, output, session) {
   
   output$mytable4 <- DT::renderDataTable({
     DT::datatable({
-      data<-single_tari_data[single_tari_data$`Material Number`==input$PN,input$show_vars4]
+      if (input$PN=="All"){
+        data<-single_tari_data[,input$show_vars4]
+      }
+      else {data<-single_tari_data[single_tari_data$`Material Number`==input$PN,input$show_vars4]
+      }
+      
       if(input$MN!="All"){
         data<-data[data$`Material Number`==input$MN,]
       }
