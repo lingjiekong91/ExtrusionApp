@@ -53,6 +53,9 @@ temp[,1:2]=str_split_fixed(single_tari_data$`Start Time`,' ',2)
 temp[,1]=as.Date(temp[,1],"%m/%d/%Y",origin="1970-01-01")
 single_tari_data=cbind(single_tari_data[,1:which(colnames(single_tari_data)=="Start Time")-1],
                        temp,single_tari_data[,(which(colnames(single_tari_data)=="Start Time")+1):ncol(single_tari_data)])
+
+
+#MES Table
 #get the initial Start Date Period for MES Table
 Time_Start=sqldf("select Min([Start Date]) from single_tari_data")
 Time_Start<-as.numeric(Time_Start)
@@ -60,6 +63,25 @@ Time_Start<-as.Date(Time_Start,origin="1970-01-01")
 Time_End<-sqldf("select Max([Start Date]) from single_tari_data")
 Time_End<-as.numeric(Time_End)
 Time_End<-as.Date(Time_End,origin="1970-01-01")
+
+#Catalog--Multi-PPS-Table
+#Fill the Partnumber and PPS number for each single row in the table
+for (i in 1:nrow(multi_pps_data)){
+  if(multi_pps_data[i,"Part Number"]==""){
+    multi_pps_data[i,"Part Number"]=multi_pps_data[i-1,"Part Number"]
+  }
+  if(multi_pps_data[i,"PPS Number"]==""){
+    multi_pps_data[i,"PPS Number"]=multi_pps_data[i-1,"PPS Number"]
+  }
+}
+
+#display all rows which share the same partnumbers where the parameter meets the requirements
+temp=sqldf("select * from multi_pps_data where multi_pps_data.[Part Number] in 
+              (select [Part Number] from multi_pps_data 
+                where [Barrel Zone 1 Temperature  F]=345)")
+
+
+#*********************************************
 
 #Find the earliest date and latest date of start time in MES
 
@@ -277,9 +299,9 @@ server <- function(input, output, session) {
   
   #create all input box in all tabs
   output$PN_input<-renderUI({
-    selectInput("PN","Part Number",multiple=TRUE,
+    selectizeInput("PN","Part Number",multiple=TRUE,
                 c("All",unique(as.character(single_pps_data$`Part Number`))),
-                selected="All")
+                selected=NULL)
   })
   output$PD_input<-renderUI({
     selectInput("PD","Part Description",
