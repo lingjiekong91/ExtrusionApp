@@ -67,8 +67,19 @@ Time_End<-sqldf("select Max([Start Date]) from single_tari_data")
 Time_End<-as.numeric(Time_End)
 Time_End<-as.Date(Time_End,origin="1970-01-01")
 
+
+
+#Special Parameter---Change the blank to No
+for (i in 26:37 ){
+  for (j in 1:nrow(single_pps_data)){
+  if(single_pps_data[j,i]==""){
+    single_pps_data[j,i]="No"
+  }
+  }
+}
+
 #Catalog--Multi-PPS-Table
-#Fill the Partnumber and PPS number for each single row in the table
+  #Fill the Partnumber and PPS number for each single row in the table
 for (i in 1:nrow(multi_pps_data)){
   if(multi_pps_data[i,"Part Number"]==""){
     multi_pps_data[i,"Part Number"]=multi_pps_data[i-1,"Part Number"]
@@ -77,6 +88,9 @@ for (i in 1:nrow(multi_pps_data)){
     multi_pps_data[i,"PPS Number"]=multi_pps_data[i-1,"PPS Number"]
   }
 }
+  #Special Parameter---use NA to replace blank
+
+
 
 #display all rows which share the same partnumbers where the parameter meets the requirements
 temp=sqldf("select * from multi_pps_data where multi_pps_data.[Part Number] in 
@@ -97,11 +111,12 @@ ui <- fluidPage(
   
   tabsetPanel(id = "application",
               tabPanel('Part Catalog',
+                       
                        sidebarPanel(
                          conditionalPanel(
                            'input.dataset === "Single Extrusion PPS Data"',uiOutput("show_vars1_input")),
                          conditionalPanel(
-                           'input.dataset === "Multi-Layered Exutrusion PPS Data"',uiOutput("show_vars2_input")),
+                           'input.dataset === "Multi-Layered Extrusion PPS Data"',uiOutput("show_vars2_input")),
                          conditionalPanel(
                            'input.dataset === "Tapered Extrusion PPS Data"',uiOutput("show_Vars3_input"))
                        ),
@@ -112,49 +127,49 @@ ui <- fluidPage(
                                     fluidRow(
                                       column(8,
                                              fluidRow(
-                                               column(3,uiOutput("PN_input")),
-                                               column(3,uiOutput("PD_input")),
-                                               column(3,uiOutput("RN_input")),
-                                               column(3,uiOutput("RD_input"))
+                                               column(3,uiOutput("PCSPN_input")),
+                                               column(3,uiOutput("PCSPD_input")),
+                                               column(3,uiOutput("PCSRN_input")),
+                                               column(3,uiOutput("PCSRD_input"))
                                                ),
                                              fluidRow(
-                                               column(3,uiOutput("PPSN_input")),
-                                               column(3,uiOutput("DS_input")),
-                                               column(3,uiOutput("TS_input")),
-                                               column(3,uiOutput("SP_input"))
+                                               column(3,uiOutput("PCSPPSN_input")),
+                                               column(3,uiOutput("PCSDS_input")),
+                                               column(3,uiOutput("PCSTS_input")),
+                                               column(3,uiOutput("PCSSP_input"))
                                                ),
                                              fluidRow(
-                                               column(3,uiOutput("IDI_input")),
-                                               column(3,uiOutput("ODI_input")),
-                                               column(3,uiOutput("WT_input")),
-                                               column(3,uiOutput("OR_input"))
+                                               column(3,uiOutput("PCSIDI_input")),
+                                               column(3,uiOutput("PCSODI_input")),
+                                               column(3,uiOutput("PCSWT_input")),
+                                               column(3,uiOutput("PCSOR_input"))
                                                ),
                                              fluidRow(
-                                               column(3,uiOutput("CCT_input")),
-                                               column(3,uiOutput("Length_input")),
-                                               column(3,uiOutput("PPD_input"))
+                                               column(3,uiOutput("PCSCCT_input")),
+                                               column(3,uiOutput("PCSLength_input")),
+                                               column(3,uiOutput("PCSPPD_input"))
                                                )
                                              ),
                                       column(4,
                                              fluidRow(
-                                               column(4,uiOutput("NEXIV_input")),
-                                               column(4,uiOutput("Annealed_input")),
-                                               column(4,uiOutput("Caliper_input"))
+                                               column(4,uiOutput("PCSNEXIV_input")),
+                                               column(4,uiOutput("PCSAnnealed_input")),
+                                               column(4,uiOutput("PCSCaliper_input"))
                                              ),
                                              fluidRow(
-                                               column(4,uiOutput("OS_input")),
-                                               column(4,uiOutput("MP_input")),
-                                               column(4,uiOutput("HT_input"))
+                                               column(4,uiOutput("PCSOS_input")),
+                                               column(4,uiOutput("PCSMP_input")),
+                                               column(4,uiOutput("PCSHT_input"))
                                                ),
                                              fluidRow(
-                                               column(4,uiOutput("SPD_input")),
-                                               column(4,uiOutput("SLD_input")),
-                                               column(4,uiOutput("DLN_input"))
+                                               column(4,uiOutput("PCSSPD_input")),
+                                               column(4,uiOutput("PCSSLD_input")),
+                                               column(4,uiOutput("PCSDLN_input"))
                                                ),
                                              fluidRow(
-                                               column(4,uiOutput("ULT_input")),
-                                               column(5,uiOutput("VC_input") ),
-                                               column(3,uiOutput("IRD_input"))
+                                               column(4,uiOutput("PCSULT_input")),
+                                               column(5,uiOutput("PCSVC_input") ),
+                                               column(3,uiOutput("PCSIRD_input"))
                                                )
                                              )
                                       ),
@@ -163,11 +178,40 @@ ui <- fluidPage(
                                       verbatimTextOutput("Summary1")
                                     )
                            ),
-                           tabPanel('Multi-Layered Exutrusion PPS Data', DT::dataTableOutput('mytable2')),
-                           tabPanel('Tapered Extrusion PPS Data', DT::dataTableOutput('mytable3'))
-                         )
-                       )#end mainPanel
-              ),#end tabPanel
+                           tabPanel('Multi-Layered Extrusion PPS Data', 
+                                    fluidRow(
+                                      column(3,uiOutput("PCMPN_input")),
+                                      column(3,uiOutput("PCMPD_input")),
+                                      column(3,uiOutput("PCMRN_input")),
+                                      column(3,uiOutput("PCMRD_input")),
+                                      column(3,uiOutput("PCMDS_input")),
+                                      column(3,uiOutput("PCMTS_input")),
+                                      column(3,uiOutput("PCMID_input")),
+                                      column(3,uiOutput("PCMOD_input")),
+                                      column(3,uiOutput("PCMIWT_input")),
+                                      column(3,uiOutput("PCMMWT_input")),
+                                      column(3,uiOutput("PCMOWT_input")),
+                                      column(3,uiOutput("PCMTWT_input")),
+                                      column(3,uiOutput("PCMTL_input"))
+                                      ),
+                                    fluidRow(
+                                      DT::dataTableOutput('mytable2')
+                                      )
+                                    ), #end Multi-Layered Extrusion PPS Data
+                           tabPanel('Tapered Extrusion PPS Data',
+                                    fluidRow(
+                                      column(3,uiOutput("PCTPN_input")),
+                                      column(3,uiOutput("PCTPD_input")),
+                                      column(3,uiOutput("PCTRN_input")),
+                                      column(3,uiOutput("PCTRD_input"))
+                                      ),
+                                    fluidRow(
+                                      DT::dataTableOutput('mytable3')
+                                      )
+                                    )  #end Tapered Extrusion PPS Data
+                           )#end tabsetPanel
+                         )#end mainPanel
+                       ),#end tabPanel
               
               tabPanel('Output',
                        sidebarPanel(
@@ -257,13 +301,20 @@ server <- function(input, output, session) {
   })
   output$show_vars2_input<-renderUI({
     checkboxGroupInput('show_vars2', 'Columns to Show:',
-                       c("Part Number", "Part Description", 
+                       choices= c("Part Number", "Part Description", 
                          "Resin Number", "Resin Description",
-                         "Die Size", "Tip Size",
+                         "Die Size (in)", "Tip Size (in)",
                          "Inner Diameter (in)", "Outer Diameter (in)",
                          "Inner Wall Thickness (in)", "Middle Wall Thickness (in)",
                          "Outer Wall Thickness (in)",
-                         "Total Wall Thickness (in)", "Total Length (in)")
+                         "Total Wall Thickness (in)", "Total Length"),
+                       selected=c("Part Number", "Part Description", 
+                                  "Resin Number", "Resin Description",
+                                  "Die Size (in)", "Tip Size (in)",
+                                  "Inner Diameter (in)", "Outer Diameter (in)",
+                                  "Inner Wall Thickness (in)", "Middle Wall Thickness (in)",
+                                  "Outer Wall Thickness (in)", "Total Wall Thickness (in)", "Total Length"
+                                  )
                        
     )
   })
@@ -300,197 +351,179 @@ server <- function(input, output, session) {
     )
   })
   
-  #create all input box in all tabs
-  output$PN_input<-renderUI({
-    selectizeInput("PN","Part Number",multiple=TRUE,
+  #create Server side of input box for Part Catalog Single Extrusion PPS Data
+  output$PCSPN_input<-renderUI({
+    selectizeInput("PCSPN","Part Number",multiple=TRUE,
                 c("All",unique(as.character(single_pps_data$`Part Number`))),
-                selected=NULL)
+                selected="All")
   })
-  output$PD_input<-renderUI({
-    selectInput("PD","Part Description",
+  output$PCSPD_input<-renderUI({
+    selectInput("PCSPD","Part Description",
                 c("All",unique(as.character(single_pps_data$`Part Description`))))
   })
-  output$RN_input<-renderUI({
-    selectInput("RN","Resin Number",
+  output$PCSRN_input<-renderUI({
+    selectInput("PCSRN","Resin Number",
                 c("All",unique(as.character(single_pps_data$`Resin Number`))))
   })
-  output$RD_input<-renderUI({
-    selectInput("RD","Resin Description",
+  output$PCSRD_input<-renderUI({
+    selectInput("PCSRD","Resin Description",
                 c("All",unique(as.character(single_pps_data$`Resin Description`))))
   })
-  output$PPSN_input<-renderUI({
-    selectInput("PPSN","PPS Number",
+  output$PCSPPSN_input<-renderUI({
+    selectInput("PCSPPSN","PPS Number",
                 c("All",unique(as.character(single_pps_data$`PPS Number`))))
   })
-  output$DS_input<-renderUI({
+  output$PCSDS_input<-renderUI({
     DS_min=-1
     DS_max=0.54
-    sliderInput("DS","Die Size(in)",min=DS_min,max=DS_max,value=c(DS_min,DS_max))
+    sliderInput("PCSDS","Die Size(in)",min=DS_min,max=DS_max,value=c(DS_min,DS_max))
   })
-  output$TS_input<-renderUI({
+  output$PCSTS_input<-renderUI({
     TS_min=-1
     TS_max=0.49
-    sliderInput("TS","Tip Size(in)",min=TS_min,max=TS_max,value=c(TS_min,TS_max))
+    sliderInput("PCSTS","Tip Size(in)",min=TS_min,max=TS_max,value=c(TS_min,TS_max))
   })
-  output$SP_input<-renderUI({
-    selectInput("SP","Screw Print",
+  output$PCSSP_input<-renderUI({
+    selectInput("PCSSP","Screw Print",
                 c("All",unique(as.character(single_pps_data$`Screw Print`))))
   })
-  output$IDI_input<-renderUI({
+  output$PCSIDI_input<-renderUI({
     IDI_min=0.0009
     IDI_max=0.353
-    sliderInput("IDI","Inner Diameter(in)",min=IDI_min,max=IDI_max,value=c(IDI_min,IDI_max),sep="",round=-4)
+    sliderInput("PCSIDI","Inner Diameter(in)",min=IDI_min,max=IDI_max,value=c(IDI_min,IDI_max),sep="",round=-4)
   })
-  output$ODI_input<-renderUI({
+  output$PCSODI_input<-renderUI({
     ODI_min=0.0133
     ODI_max=0.495
-    sliderInput("ODI","Out Diameter(in)",min=ODI_min,max=ODI_max,value=c(ODI_min,ODI_max),sep="",round=-4)
+    sliderInput("PCSODI","Out Diameter(in)",min=ODI_min,max=ODI_max,value=c(ODI_min,ODI_max),sep="",round=-4)
   })
-  output$WT_input<-renderUI({
+  output$PCSWT_input<-renderUI({
     WT_min=0.0005
     WT_max=0.053
-    sliderInput("WT","Wall Thickness(in)",min=WT_min,max=WT_max,value=c(WT_min,WT_max),sep="",round=-4)
+    sliderInput("PCSWT","Wall Thickness(in)",min=WT_min,max=WT_max,value=c(WT_min,WT_max),sep="",round=-4)
   })
-  output$OR_input<-renderUI({
+  output$PCSOR_input<-renderUI({
     OR_min=0
     OR_max=0.01
-    sliderInput("OR","Out of Roundness(in)",min=OR_min,max=OR_max,value=c(OR_min,OR_max),sep="",round=-4)
+    sliderInput("PCSOR","Out of Roundness(in)",min=OR_min,max=OR_max,value=c(OR_min,OR_max),sep="",round=-4)
   })
-  output$CCT_input<-renderUI({
+  output$PCSCCT_input<-renderUI({
     CCT_min=1
     CCT_max=2
-    sliderInput("CCT","Concentricity(in)",min=CCT_min,max=CCT_max,value=c(CCT_min,CCT_max),sep="",round=-4)
+    sliderInput("PCSCCT","Concentricity(in)",min=CCT_min,max=CCT_max,value=c(CCT_min,CCT_max),sep="",round=-4)
   })
-  output$Length_input<-renderUI({
+  output$PCSLength_input<-renderUI({
     Length_min=0.015
     Length_max=1
-    sliderInput("Length","Length(in)",min=Length_min,max=Length_max,value=c(Length_min,Length_max),sep="",round=-4)
+    sliderInput("PCSLength","Length(in)",min=Length_min,max=Length_max,value=c(Length_min,Length_max),sep="",round=-4)
   })
   
-  output$PPD_input<-renderUI({
-    selectInput("PPD","Perpendicularity(in)",
+  output$PCSPPD_input<-renderUI({
+    selectInput("PCSPPD","Perpendicularity(in)",
                 c("All",unique(as.character(single_pps_data$`Perpendicularity (in)`))))
   })
-  output$NEXIV_input<-renderUI({
-    selectInput("NEXIV","NEXIV",
-                c("All",unique(as.character(single_pps_data$NEXIV))))
+  output$PCSNEXIV_input<-renderUI({
+    selectInput("PCSNEXIV","NEXIV",choices=c("All","yes","No"))
   })
-  output$Annealed_input<-renderUI({
-    selectInput("Annealed","Annealed",
-                c("All",unique(as.character(single_pps_data$Annealed))))
+  output$PCSAnnealed_input<-renderUI({
+    selectInput("PCSAnnealed","Annealed",choices=c("All","yes","No"))
   })
-  output$Caliper_input<-renderUI({
-    selectInput("Caliper","Caliper",
-                c("All",unique(as.character(single_pps_data$Caliper))))
+  output$PCSCaliper_input<-renderUI({
+    selectInput("PCSCaliper","Caliper",choices=c("All","yes","No"))
   })
-  output$OS_input<-renderUI({
-    selectInput("OS","OD Sort",
-                c("All",unique(as.character(single_pps_data$`OD Sort`))))
+  output$PCSOS_input<-renderUI({
+    selectInput("PCSOS","OD Sort",choices=c("All","yes","No"))
   })
-  output$MP_input<-renderUI({
-    selectInput("MP","Melt Pump",
-                c("All",unique(as.character(single_pps_data$`Melt Pump`))))
+  output$PCSMP_input<-renderUI({
+    selectInput("PCSMP","Melt Pump",choices=c("All","yes","No"))
   })
-  output$HT_input<-renderUI({
-    selectInput("HT","Hypo Tip",
-                c("All",unique(as.character(single_pps_data$`Hypo Tip`))))
+  output$PCSHT_input<-renderUI({
+    selectInput("PCSHT","Hypo Tip",choices=c("All","yes","No"))
   })
-  output$SPD_input<-renderUI({
-    selectInput("SPD","Spark Die",
-                c("All",unique(as.character(single_pps_data$`Sparker Die`))))
+  output$PCSSPD_input<-renderUI({
+    selectInput("PCSSPD","Spark Die",choices=c("All","yes","No"))
   })
-  output$SLD_input<-renderUI({
-    selectInput("SLD","Slicking Die",
-                c("All",unique(as.character(single_pps_data$`Slicking Die`))))
+  output$PCSSLD_input<-renderUI({
+    selectInput("PCSSLD","Slicking Die",choices=c("All","yes","No"))
   })
-  output$DLN_input<-renderUI({
-    selectInput("DLN","Delamination",
-                c("All",unique(as.character(single_pps_data$Delamination))))
+  output$PCSDLN_input<-renderUI({
+    selectInput("PCSDLN","Delamination",choices=c("All","yes","No"))
   })
-  output$ULT_input<-renderUI({
-    selectInput("ULT","Ultrasonic",
-                c("All",unique(as.character(single_pps_data$Ultrasonic))))
+  output$PCSULT_input<-renderUI({
+    selectInput("PCSULT","Ultrasonic",choices=c("All","yes","No"))
   })
-  output$VC_input<-renderUI({
-    selectInput("VC","Vacuum Calibration",
-                c("All",unique(as.character(single_pps_data$`Vacuum Calibration`))))
+  output$PCSVC_input<-renderUI({
+    selectInput("PCSVC","Vacuum Calibration",choices=c("All","yes","No"))
   })
-  output$IRD_input<-renderUI({
-    selectInput("IRD","Irradiated",
-                c("All",unique(as.character(single_pps_data$Irradiated))))
+  output$PCSIRD_input<-renderUI({
+    selectInput("PCSIRD","Irradiated",choices=c("All","yes","No"))
   })
   
   output$mytable1 <- DT::renderDataTable({
     DT::datatable({
-      data1<-single_pps_data[, input$show_vars1]
-      if(input$PN!="All"){
-        data1<-data1[data1$`Part Number`==input$PN,]
+      data_PCS<-single_pps_data[, input$show_vars1]
+      if(input$PCSPN!="All"){
+        data_PCS<-data_PCS[data_PCS$`Part Number`==input$PCSPN,]
       }
-      if(input$PD!="All"){
-        data1<-data1[data1$`Part Description`==input$PD,]
+      if(input$PCSPD!="All"){
+        data_PCS<-data_PCS[data_PCS$`Part Description`==input$PCSPD,]
       }
-      if(input$RN!="All"){
-        data1<-data1[data1$`Resin Number`==input$RN,]
+      if(input$PCSRN!="All"){
+        data_PCS<-data_PCS[data_PCS$`Resin Number`==input$PCSRN,]
       }
-      if(input$RD!="All"){
-        data1<-data1[data1$`Resin Descriptionr`==input$RD,]
+      if(input$PCSRD!="All"){
+        data_PCS<-data_PCS[data_PCS$`Resin Descriptionr`==input$PCSRD,]
       }
-      if(input$PPSN!="All"){
-        data1<-data1[data1$`PPS Number`==input$PPSN,]
+      if(input$PCSPPSN!="All"){
+        data_PCS<-data_PCS[data_PCS$`PPS Number`==input$PCSPPSN,]
       }
-#Die Size
-# Tip Size
-      if(input$SP!="All"){
-        data1<-data1[data1$`Screw Print`==input$SP,]
+#Die Size#Tip Size
+      if(input$PCSSP!="All"){
+        data_PCS<-data_PCS[data_PCS$`Screw Print`==input$PCSSP,]
       }
       
-#IDI
-#ODI
-#WT
-#OR
-#CCT
-#Length
-      if(input$PPD!="All"){
-        data1<-data1[data1$`Perpendicularity (in)`==input$PPD,]
+#IDI#ODI#WT#OR#CCT#Length
+      if(input$PCSPPD!="All"){
+        data_PCS<-data_PCS[data_PCS$`Perpendicularity (in)`==input$PCSPPD,]
       }
-      if(input$NEXIV!="All"){
-        data1<-data1[data1$`NEXIV`==input$NEXIV,]
+      if(input$PCSNEXIV!="All"){
+        data_PCS<-data_PCS[data_PCS$`NEXIV`==input$PCSNEXIV,]
       }
-      if(input$Annealed!="All"){
-        data1<-data1[data1$`Annealed`==input$Annealed,]
+      if(input$PCSAnnealed!="All"){
+        data_PCS<-data_PCS[data_PCS$`Annealed`==input$PCSAnnealed,]
       }
-      if(input$Caliper!="All"){
-        data1<-data1[data1$`Caliper`==input$Caliper,]
+      if(input$PCSCaliper!="All"){
+        data_PCS<-data_PCS[data_PCS$`Caliper`==input$PCSCaliper,]
       }
-      if(input$OS!="All"){
-        data1<-data1[data1$`OD Sort`==input$OS,]
+      if(input$PCSOS!="All"){
+        data_PCS<-data_PCS[data_PCS$`OD Sort`==input$PCSOS,]
       }
-      if(input$MP!="All"){
-        data1<-data1[data1$`Melt Pumpr`==input$MP,]
+      if(input$PCSMP!="All"){
+        data_PCS<-data_PCS[data_PCS$`Melt Pump`==input$PCSMP,]
       }
-      if(input$HT!="All"){
-        data1<-data1[data1$`Hypo Tip`==input$HT,]
+      if(input$PCSHT!="All"){
+        data_PCS<-data_PCS[data_PCS$`Hypo Tip`==input$PCSHT,]
       }
-      if(input$SPD!="All"){
-        data1<-data1[data1$`Sparker Die`==input$SPD,]
+      if(input$PCSSPD!="All"){
+        data_PCS<-data_PCS[data_PCS$`Sparker Die`==input$PCSSPD,]
       }
-      if(input$SLD!="All"){
-        data1<-data1[data1$`Slicking Die`==input$SLD,]
+      if(input$PCSSLD!="All"){
+        data_PCS<-data_PCS[data_PCS$`Slicking Die`==input$PCSSLD,]
       }
-      if(input$DLN!="All"){
-        data1<-data1[data1$`Delamination`==input$DLN,]
+      if(input$PCSDLN!="All"){
+        data_PCS<-data_PCS[data_PCS$`Delamination`==input$PCSDLN,]
       }
-      if(input$ULT!="All"){
-        data1<-data1[data1$`Ultrasonic`==input$ULT,]
+      if(input$PCSULT!="All"){
+        data_PCS<-data_PCS[data_PCS$`Ultrasonic`==input$PCSULT,]
       }
-      if(input$VC!="All"){
-        data1<-data1[data1$`Vacuum Calibration`==input$VC,]
+      if(input$PCSVC!="All"){
+        data_PCS<-data_PCS[data_PCS$`Vacuum Calibration`==input$PCSVC,]
       }
-      if(input$IRD!="All"){
-        data1<-data1[data1$`Irradiated`==input$IRD,]
+      if(input$PCSIRD!="All"){
+        data_PCS<-data_PCS[data_PCS$`Irradiated`==input$PCSIRD,]
       }
 
-      data1
+      data_PCS
     },
     options = list(orderClasses = TRUE, 
                    columnDefs = list(list(className = 'dt-center', 
@@ -501,22 +534,135 @@ server <- function(input, output, session) {
                    scrollY=500,
                    autoWidth=TRUE))
   })
+  
   output$Summary1<-renderPrint({
     input$PN
   })
-        
-  output$mytable2 <- DT::renderDataTable({
-    DT::datatable(multi_pps_data[, input$show_vars2], 
-                  options = list(orderClasses = TRUE, 
-                                 columnDefs = list(list(className = 'dt-center', 
-                                                        targets = "_all"
-                                 )
-                                 ),
-                                 scrollX=TRUE,
-                                 scrollY=500,
-                                 autoWidth=TRUE), 
-                  filter = "top")
+
+  
+  #create Server side of input box for Part Catalog Multi-Layered Extrusion PPS Data
+  output$PCMPN_input<-renderUI({
+    selectizeInput("PCMPN","Part Number",
+                   c("All",unique(as.character(multi_pps_data$`Part Number`))),
+                   selected="All")
   })
+  output$PCMPD_input<-renderUI({
+    selectizeInput("PCMPD","Part Description",
+                   c("All",unique(as.character(multi_pps_data$`Part Description`))),
+                   selected="All")
+  })
+  output$PCMRN_input<-renderUI({
+    selectizeInput("PCMRN","Resin Number",
+                   c("All",unique(as.character(multi_pps_data$`Resin Number`))),
+                   selected="All")
+  })
+  output$PCMRD_input<-renderUI({
+    selectizeInput("PCMRD","Resin Description",
+                   c("All",unique(as.character(multi_pps_data$`Resin Description`))),
+                   selected="All")
+  })
+  output$PCMDS_input<-renderUI({
+    selectizeInput("PCMDS","Die Size",
+                   c("All",unique(as.character(multi_pps_data$`Die Size (in)`))),
+                   selected="All")
+  })
+  output$PCMTS_input<-renderUI({
+    selectizeInput("PCMTS","Tip Size",
+                   c("All",unique(as.character(multi_pps_data$`Tip Size (in)`))),
+                   selected="All")
+  })
+  output$PCMID_input<-renderUI({
+    selectizeInput("PCMID","Inner Diameter (in)",
+                   c("All",unique(as.character(multi_pps_data$`Inner Diameter (in)`))),
+                   selected="All")
+  })
+  output$PCMOD_input<-renderUI({
+    selectizeInput("PCMOD","Outer Diameter (in)",
+                   c("All",unique(as.character(multi_pps_data$`Outer Diameter (in)`))),
+                   selected="All")
+  })
+  output$PCMIWT_input<-renderUI({
+    selectizeInput("PCMIWT","Inner Wall Thickness (in)",
+                   c("All",unique(as.character(multi_pps_data$`Inner Wall Thickness (in)`))),
+                   selected="All")
+  })
+  
+  output$PCMMWT_input<-renderUI({
+    selectizeInput("PCMMWT","Middle Wall Thickness (in)",
+                   c("All",unique(as.character(multi_pps_data$`Middle Wall Thickness (in)`))),
+                   selected="All")
+  })
+  output$PCMOWT_input<-renderUI({
+    selectizeInput("PCMOWT","Outer Wall Thickness (in)",
+                   c("All",unique(as.character(multi_pps_data$`Outer Wall Thickness (in)`))),
+                   selected="All")
+  })
+  output$PCMTWT_input<-renderUI({
+    selectizeInput("PCMTWT","Total Wall Thickness (in)",
+                   c("All",unique(as.character(multi_pps_data$`Total Wall Thickness (in)`))),
+                   selected="All")
+  })
+  output$PCMTL_input<-renderUI({
+    selectizeInput("PCMTL","Total Length",
+                   c("All",unique(as.character(multi_pps_data$`Total Length`))),
+                   selected="All")
+  })
+  
+  #create Server side of Part Catalog Multi-Layered Extrusion PPS Data's table-----mytable2  
+  output$mytable2 <- DT::renderDataTable({
+    DT::datatable({
+      data_PCM<-multi_pps_data[, input$show_vars2]            
+      if(input$PCMPN!="All"){
+        data_PCM<-data_PCM[data_PCM$`Part Number`==input$PCMPN,]
+      }
+      if(input$PCMPD!="All"){
+        data_PCM<-data_PCM[data_PCM$`Part Description`==input$PCMPD,]
+      }
+      if(input$PCMRN!="All"){
+        data_PCM<-data_PCM[data_PCM$`Resin Number`==input$PCMRN,]
+      }
+      if(input$PCMRD!="All"){
+        data_PCM<-data_PCM[data_PCM$`Resin Description`==input$PCMRD,]
+      }
+      if(input$PCMDS!="All"){
+        data_PCM<-data_PCM[data_PCM$`Die Size (in)`==input$PCMDS,]
+      }
+      if(input$PCMTS!="All"){
+        data_PCM<-data_PCM[data_PCM$`Tip Size (in)`==input$PCMTS,]
+      }
+      if(input$PCMID!="All"){
+        data_PCM<-data_PCM[data_PCM$`Inner Diameter (in)`==input$PCMID,]
+      }
+      if(input$PCMOD!="All"){
+        data_PCM<-data_PCM[data_PCM$`Outer Diameter (in)`==input$PCMOD,]
+      }
+      if(input$PCMIWT!="All"){
+        data_PCM<-data_PCM[data_PCM$`Inner Wall Thickness (in)`==input$PCMIWT,]
+      }
+      if(input$PCMMWT!="All"){
+        data_PCM<-data_PCM[data_PCM$`Middle Wall Thickness (in)`==input$PCMMWT,]
+      }
+      if(input$PCMOWT!="All"){
+        data_PCM<-data_PCM[data_PCM$`Outer Wall Thickness (in)`==input$PCMOWT,]
+      }
+      if(input$PCMTWT!="All"){
+        data_PCM<-data_PCM[data_PCM$`Total Wall Thickness (in)`==input$PCMTWT,]
+      }
+      if(input$PCMTL!="All"){
+        data_PCM<-data_PCM[data_PCM$`Total Length`==input$PCMTL,]
+      }
+      data_PCM
+    },
+    options = list(orderClasses = TRUE, 
+                   columnDefs = list(list(className = 'dt-center', 
+                                          targets = "_all"
+                   )
+                   ),
+                   scrollX=TRUE,
+                   scrollY=500,
+                   autoWidth=TRUE))
+  })
+  
   
   output$mytable3 <- DT::renderDataTable({
     DT::datatable(tapered_pps_data[, input$show_vars3], 
@@ -534,27 +680,27 @@ server <- function(input, output, session) {
   output$mytable4 <- DT::renderDataTable({
     DT::datatable({
       if (input$PN=="All"){
-        data4<-single_tari_data[,input$show_vars4]
+        data_OutputM<-single_tari_data[,input$show_vars4]
       }
-      else {data4<-single_tari_data[single_tari_data$`Material Number`==input$PN,input$show_vars4]
+      else {data_OutputM<-single_tari_data[single_tari_data$`Material Number`==input$PN,input$show_vars4]
       }
       
       if(input$MN!="All"){
-        data4<-data4[data4$`Material Number`==input$MN,]
+        data_OutputM<-data_OutputM[data_OutputM$`Material Number`==input$MN,]
       }
       if(input$Batch!="All"){
-        data4<-data4[data4$`SAP Batch Number`==input$Batch,]
+        data_OutputM<-data_OutputM[data_OutputM$`SAP Batch Number`==input$Batch,]
       }
       if(input$SWR!="All"){
-        data4<-data4[data4$`SWR Number`==input$SWR,]
+        data_OutputM<-data_OutputM[data_OutputM$`SWR Number`==input$SWR,]
       }
       if(input$OperatorID!="All"){
-        data4<-data4[data4$`Operator ID`==input$OperatorID,]
+        data_OutputM<-data_OutputM[data_OutputM$`Operator ID`==input$OperatorID,]
       }
       if(input$Start[1]!=Time_Start || input$Start[2]!=Time_End){
-        data4<-data4[(data4$`Start Date`<=input$Start[2] & data4$`Start Date`>=input$Start[1]),]
+        data_OutputM<-data_OutputM[(data_OutputM$`Start Date`<=input$Start[2] & data_OutputM$`Start Date`>=input$Start[1]),]
       }
-      data4
+      data_OutputM
     },
     options = list(orderClasses = TRUE, 
                    columnDefs = list(list(className = 'dt-center', 
