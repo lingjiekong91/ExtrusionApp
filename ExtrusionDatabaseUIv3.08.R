@@ -11,14 +11,13 @@ library(bootstrap)
 library(jpeg)
 library(ggplot2)
 library(DT)
-<<<<<<< HEAD
-=======
+
 library(stringr)
 library(gsubfn)
 library(proto)
 library(sqldf)
 #Change the search bar size to show the entire cell.
->>>>>>> master
+
 
 
 #Creating variables across all sessions
