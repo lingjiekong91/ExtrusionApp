@@ -50,8 +50,7 @@ single_tari_data=cbind(single_tari_data[,1:which(colnames(single_tari_data)=="St
                        temp,single_tari_data[,(which(colnames(single_tari_data)=="Start Time")+1):ncol(single_tari_data)])
 
 
-#MES Table
-#get the initial Start Date Period for MES Table
+#MES Table---get the initial Start Date Period for MES Table
 Time_Start=sqldf("select Min([Start Date]) from single_tari_data")
 Time_Start<-as.numeric(Time_Start)
 Time_Start<-as.Date(Time_Start,origin="1970-01-01")
@@ -61,7 +60,7 @@ Time_End<-as.Date(Time_End,origin="1970-01-01")
 
 
 
-#Special Parameter---Change the blank to No
+#Single Extrusion PPS Data---Special Parameter---Change the blank to No
 for (i in 26:37 ){
   for (j in 1:nrow(single_pps_data)){
     if(single_pps_data[j,i]==""){
@@ -70,8 +69,7 @@ for (i in 26:37 ){
   }
 }
 
-#Catalog--Multi-PPS-Table
-#Fill the Partnumber and PPS number for each single row in the table
+#Catalog--Multi Extrusion PPS Table---Fill the Partnumber and PPS number for each single row in the table
 for (i in 1:nrow(multi_pps_data)){
   if(multi_pps_data[i,"Part Number"]==""){
     multi_pps_data[i,"Part Number"]=multi_pps_data[i-1,"Part Number"]
@@ -81,6 +79,19 @@ for (i in 1:nrow(multi_pps_data)){
   }
 }
 #Special Parameter---use NA to replace blank
+
+
+
+
+for (i in 35:45 ){
+  for (j in 1:nrow(tapered_pps_data)){
+    if(tapered_pps_data[j,i]=="NA"){
+      tapered_pps_data[j,i]="No"
+    }
+  }
+}
+
+
 
 
 
