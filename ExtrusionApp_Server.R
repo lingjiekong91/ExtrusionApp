@@ -1,5 +1,4 @@
-server <- function(input, output, session) {
-
+server<-function(input, output, session) {
   #create six columns in three tabs
   output$show_vars1_input<-renderUI({
     checkboxGroupInput('show_vars1', 'Columns to Show:',
@@ -9,7 +8,7 @@ server <- function(input, output, session) {
                                     "Die Size", "Tip Size",
                                     "Inner Diameter (in)", "Outer Diameter (in)",
                                     "Wall Thickness (in)", "Length (in)")
-    )
+                       )
   })
   output$show_vars2_input<-renderUI({
     checkboxGroupInput('show_vars2', 'Columns to Show:',
@@ -19,15 +18,13 @@ server <- function(input, output, session) {
                                   "Die Size (in)", "Tip Size (in)",
                                   "Inner Diameter (in)", "Outer Diameter (in)",
                                   "Inner Wall Thickness (in)", "Middle Wall Thickness (in)",
-                                  "Outer Wall Thickness (in)", "Total Wall Thickness (in)", "Total Length"
+                                  "Outer Wall Thickness (in)", "Total Wall Thickness (in)", "Total Length")
                        )
-                       
-    )
   })
   output$show_vars3_input<-renderUI({
     checkboxGroupInput('show_vars3', 'Columns to Show:',
                        choices = names(tapered_pps_data), 
-                       c("Part Number", "Part Description", 
+                       selected=c("Part Number", "Part Description", 
                          "Resin Number", "Resin Description",
                          "Die Size", "Tip Size",
                          "Proximal Inner Diameter (in)", "Proximal Inner Diameter (in)",
@@ -36,7 +33,7 @@ server <- function(input, output, session) {
                          "Distal Wall Thickness (in)",
                          "Proximal Length (in)", "Transition Length (in)", 
                          "Transition Length (in)", "Total Length (in)")
-    )
+                       )
   })
   output$show_vars4_input<-renderUI({
     checkboxGroupInput('show_vars4', 'Columns to Show:',
@@ -163,7 +160,7 @@ server <- function(input, output, session) {
   output$PCSIRD_input<-renderUI({
     selectInput("PCSIRD","Irradiated",choices=c("All","yes","No"))
   })
-
+  
   #Create Server side of Part Catalog Single Extrusion PPS Data's table-----mytable1 
   output$mytable1 <- DT::renderDataTable({
     DT::datatable({
@@ -243,7 +240,7 @@ server <- function(input, output, session) {
   #printFun2<-renderText({input$PCSRN})
   #printFun()<-c(printFun1,printFun2)
   # Keep it for the test using
- # output$Summary1<-renderPrint({printFun<-printFun1()  printFun })
+  # output$Summary1<-renderPrint({printFun<-printFun1()  printFun })
   
   
   #create Server side of input box for Part Catalog Multi-Layered Extrusion PPS Data
@@ -251,7 +248,7 @@ server <- function(input, output, session) {
     selectizeInput("PCMPN","Part Number",
                    c("All",unique(as.character(multi_pps_data$`Part Number`))),
                    selected="All")
-    })
+  })
   output$PCMPD_input<-renderUI({
     selectizeInput("PCMPD","Part Description",
                    c("All",unique(as.character(multi_pps_data$`Part Description`))),
@@ -276,6 +273,23 @@ server <- function(input, output, session) {
     selectizeInput("PCMTS","Tip Size",
                    c("All",unique(as.character(multi_pps_data$`Tip Size (in)`))),
                    selected="All")
+  })
+  output$PCMFT_input<-renderUI({
+    FT_min=1
+    FT_max=2
+    sliderInput("PCMFT","Feedthroat Temperature F",min=FT_min,max=FT_max,value=c(FT_min,FT_max),sep="",round=-4)
+  })
+  output$PCMBZT1_input<-renderUI({
+    selectInput("PCMBZT1","Barrel Zone 1 Temperature F",
+                c("All",unique(as.character(multi_pps_data$`Barrel Zone 1 Temperature  F`))))
+  })
+  output$PCMBZT2_input<-renderUI({
+    selectInput("PCMBZT2","Barrel Zone 2 Temperature F",
+                c("All",unique(as.character(multi_pps_data$`Barrel Zone 2 Temperature  F`))))
+  })
+  output$PCMBZT3_input<-renderUI({
+    selectInput("PCMBZT3","Barrel Zone 3 Temperature F",
+                c("All",unique(as.character(multi_pps_data$`Barrel Zone 3 Temperature  F`))))
   })
   output$PCMID_input<-renderUI({
     selectizeInput("PCMID","Inner Diameter (in)",
@@ -312,7 +326,7 @@ server <- function(input, output, session) {
                    c("All",unique(as.character(multi_pps_data$`Total Length`))),
                    selected="All")
   })
-
+  
   #Create Server side of Part Catalog Multi-Layered Extrusion PPS Data's table-----mytable2  
   output$mytable2 <- DT::renderDataTable({
     DT::datatable({
@@ -335,6 +349,12 @@ server <- function(input, output, session) {
       if(input$PCMTS!="All"){
         data_PCM<-data_PCM[data_PCM$`Tip Size (in)`==input$PCMTS,]
       }
+      if(input$PCMBZT1!="All"){
+        PCMBZT1_v<-input$PCMBZT1
+        PCMPN_v<-unique(data_PCM$`Part Number`[data_PCM$`Barrel Zone 1 Temperature  F`==PCMBZT1_v])
+        data_PCM<-data_PCM[data_PCM$`Part Number`==PCMPN_v,]
+      }
+ 
       if(input$PCMID!="All"){
         data_PCM<-data_PCM[data_PCM$`Inner Diameter (in)`==input$PCMID,]
       }
@@ -369,7 +389,7 @@ server <- function(input, output, session) {
   })
   
   #
-  #
+  
   #Create Server side of input box for Part Catalog Tapered Extrusion PPS Data---table 3
   output$PCTPN_input<-renderUI({
     selectizeInput("PCTPN","Part Number",
@@ -393,11 +413,13 @@ server <- function(input, output, session) {
                 c("All",unique(as.character(tapered_pps_data$`PPS Number` ))))
   })
   
-  output$PCTDS_input<-renderUI({
-    DS_min=-1
-    DS_max=0.54
-    sliderInput("PCTDS","Die Size(in)",min=DS_min,max=DS_max,value=c(DS_min,DS_max))
+  output$PCTDS_min_input<-renderUI({
+    numericInput("PCTDS_min","min",value=PCTDSmin,step=0.001)
   })
+  output$PCTDS_max_input<-renderUI({
+    numericInput("PCTDS_max","max",value=PCTDSmax,step=0.001)
+  })
+  
   output$PCTDLL_input<-renderUI({
     DLL_min=-1
     DLL_max=0.54
@@ -419,25 +441,24 @@ server <- function(input, output, session) {
                 c("All",unique(as.character(tapered_pps_data$`Screw Print`))))
   })
   
+  
   output$PCTFT_input<-renderUI({
-    FT_min=0.0009
-    FT_max=0.353
+    FT_min=1
+    FT_max=2
     sliderInput("PCTFT","Feedthroat Temperature F",min=FT_min,max=FT_max,value=c(FT_min,FT_max),sep="",round=-4)
   })
   output$PCTBZT1_input<-renderUI({
-    BZT1_min=0.0009
-    BZT1_max=0.353
-    sliderInput("PCTBZT1","Barrel Zone 1 Temperature F",min=BZT1_min,max=BZT1_max,value=c(BZT1_min,BZT1_max),sep="",round=-4)
+
+    selectInput("PCTBZT1","Barrel Zone 1 Temperature F",
+                c("All",unique(as.character(tapered_pps_data$`Barrel Zone 1 Temperature  F`))))
   })
   output$PCTBZT2_input<-renderUI({
-    BZT2_min=0.0009
-    BZT2_max=0.353
-    sliderInput("PCTBZT2","Barrel Zone 2 Temperature F",min=BZT2_min,max=BZT2_max,value=c(BZT2_min,BZT2_max),sep="",round=-4)
+    selectInput("PCTBZT2","Barrel Zone 2 Temperature F",
+                c("All",unique(as.character(tapered_pps_data$`Barrel Zone 2 Temperature  F`))))
   })
   output$PCTBZT3_input<-renderUI({
-    BZT3_min=0.0009
-    BZT3_max=0.353
-    sliderInput("PCTBZT3","Barrel Zone 3 Temperature F",min=BZT3_min,max=BZT3_max,value=c(BZT3_min,BZT3_max),sep="",round=-4)
+    selectInput("PCTBZT3","Barrel Zone 3 Temperature F",
+                c("All",unique(as.character(tapered_pps_data$`Barrel Zone 3 Temperature  F`))))
   })
   output$PCTDT1_input<-renderUI({
     DT1_min=0.0009
@@ -447,7 +468,7 @@ server <- function(input, output, session) {
   output$PCTDT2_input<-renderUI({
     DT2_min=0.0009
     DT2_max=0.353
-    sliderInput("PCTDT2","Die 2 Temperature F",min=DT2_min,max=DT2_max,value=c(DT2_min,IDT2_max),sep="",round=-4)
+    sliderInput("PCTDT2","Die 2 Temperature F",min=DT2_min,max=DT2_max,value=c(DT2_min,DT2_max),sep="",round=-4)
   })
   
   output$PCTPID_input<-renderUI({
@@ -470,7 +491,6 @@ server <- function(input, output, session) {
     POR_max=0.49
     sliderInput("PCTPOR","Proximal Out of Roundness (in)",min=POR_min,max=POR_max,value=c(POR_min,POR_max))
   })
-  
   output$PCTPC_input<-renderUI({
     PC_min=-1
     PC_max=0.49
@@ -483,9 +503,9 @@ server <- function(input, output, session) {
     sliderInput("PCTDID","Distal Inner Diameter(in)",min=DID_min,max=DID_max,value=c(DID_min,DID_max),sep="",round=-4)
   })
   output$PCTDOD_input<-renderUI({
-    DOD_min=0.0133
-    DOD_max=0.495
-    sliderInput("PCTDOD","Distal Out Diameter(in)",min=DOD_min,max=DOD_max,value=c(DOD_min,DOD_max),sep="",round=-4)
+    DOD_min<-get(min(tapered_pps_data$`Distal Outer Diameter (in)`))
+    DOD_max<-get(max(tapered_pps_data$`Distal Outer Diameter (in)`))
+    sliderInput("PCTDOD","Distal Outer Diameter(in)",min=DOD_min,max=DOD_max,value=c(DOD_min,DOD_max),sep="",round=-4)
   })
   output$PCTDWT_input<-renderUI({
     DWT_min=0.0005
@@ -566,127 +586,55 @@ server <- function(input, output, session) {
     selectInput("PCTIRD","Irradiated",choices=c("All","yes","No"))
   })
   
+  
+  
   #create Server side of Tapered Extrusion PPS Data-----mytable3
   output$mytable3 <- DT::renderDataTable({
     DT::datatable({
-      data_PCT<-tapered_pps_data[, input$show_vars3] 
-      
-      
+      data_PCT<-tapered_pps_data[, input$show_vars3]
       if(input$PCTPN!="All"){
-        data_PCT<-data_PCM[data_PCT$`Part Number`==input$PCTPN,]
+        data_PCT<-data_PCT[data_PCT$`Part Number`==input$PCTPN,]
       }
-      if(input$PCSPD!="All"){
-        data_PCT<-data_PCM[data_PCT$`Part Description`==input$PCSPD,]
+      if(input$PCTPD!="All"){
+        data_PCT<-data_PCT[data_PCT$`Part Description`==input$PCTPD,]
       }
       if(input$PCTRN!="All"){
-        data_PCT<-data_PCM[data_PCT$`Resin Number`==input$PCTRN,]
+        data_PCT<-data_PCT[data_PCT$`Resin Number`==input$PCTRN,]
       }
       if(input$PCTRD!="All"){
-        data_PCT<-data_PCM[data_PCT$`Resin Description`==input$PCTRD,]
+        data_PCT<-data_PCT[data_PCT$`Resin Description`==input$PCTRD,]
       }
       if(input$PCTPPSN!="All"){
-        data_PCT<-data_PCM[data_PCT$`PPS Number`==input$PCTPPSN,]
+        data_PCT<-data_PCT[data_PCT$`PPS Number`==input$PCTPPSN,]
+      }
+      if(input$PCTDS_min!=PCTDSmin || input$PCTDS_max!=PCTDSmax){
+        data_PCT<-data_PCT[data_PCT$`Die Size (in)`>=input$PCTDS_min & data_PCT$`Die Size (in)`<=input$PCTDS_max,]
       }
       
-      
-      
-      if(input$PCTDS!="All"){
-        data_PCT<-data_PCM[data_PCT$`Die Size (in)`==input$PCTDS,]
+      if(input$PCTBZT1!="All"){
+        data_PCT<-data_PCT[data_PCT$`Barrel Zone 1 Temperature  F`==input$PCTBZT1,]
       }
-      if(input$PCTDLL!="All"){
-        data_PCT<-data_PCM[data_PCT$`Die Land Length (in)`==input$PCTDLL,]
+      if(input$PCTBZT2!="All"){
+        data_PCT<-data_PCT[data_PCT$`Barrel Zone 2 Temperature  F`==input$PCTBZT2,]
       }
-      if(input$PCTTS!="All"){
-        data_PCT<-data_PCM[data_PCT$`Tip Size (in)`==input$PCTTS,]
-      }
-      if(input$PCTTLL!="All"){
-        data_PCT<-data_PCM[data_PCT$`Tip Land Length (in)`==input$PCTTLL,]
-      }
-      if(input$PCTSP!="All"){
-        data_PCT<-data_PCM[data_PCT$`Screw Print`==input$PCTSP,]
+      if(input$PCTBZT3!="All"){
+        data_PCT<-data_PCT[data_PCT$`Barrel Zone 3 Temperature  F`==input$PCTBZT3,]
       }
       
-      
-      
-      
-      if(input$PCMID!="All"){
-        data_PCT<-data_PCM[data_PCT$`Inner Diameter (in)`==input$PCMID,]
-      }
-      if(input$PCMOD!="All"){
-        data_PCT<-data_PCM[data_PCT$`Outer Diameter (in)`==input$PCMOD,]
-      }
-      if(input$PCMIWT!="All"){
-        data_PCT<-data_PCM[data_PCT$`Inner Wall Thickness (in)`==input$PCMIWT,]
-      }
-      if(input$PCMMWT!="All"){
-        data_PCT<-data_PCM[data_PCT$`Middle Wall Thickness (in)`==input$PCMMWT,]
-      }
-      if(input$PCMOWT!="All"){
-        data_PCT<-data_PCM[data_PCT$`Outer Wall Thickness (in)`==input$PCMOWT,]
-      }
-      if(input$PCMTWT!="All"){
-        data_PCT<-data_PCM[data_PCT$`Total Wall Thickness (in)`==input$PCMTWT,]
-      }
-      if(input$PCMTL!="All"){
-        data_PCT<-data_PCM[data_PCT$`Total Length`==input$PCMTL,]
-      }
-      
-      
-      
-      
-      if(input$PCTNEXIV!="All"){
-        data_PCT<-data_PCS[data_PCT$`NEXIV`==input$PCTNEXIV,]
-      }
-      if(input$PCTAnnealed!="All"){
-        data_PCT<-data_PCS[data_PCT$`Annealed`==input$PCTAnnealed,]
-      }
-      if(input$PCTCaliper!="All"){
-        data_PCT<-data_PCS[data_PCT$`Caliper`==input$PCTCaliper,]
-      }
-      if(input$PCTOS!="All"){
-        data_PCT<-data_PCS[data_PCT$`OD Sort`==input$PCTOS,]
-      }
-      if(input$PCTMP!="All"){
-        data_PCT<-data_PCS[data_PCT$`Melt Pump`==input$PCTMP,]
-      }
-      
-      
-      
-      
-      if(input$PCTHT!="All"){
-        data_PCT<-data_PCS[data_PCT$`Hypo Tip`==input$PTSHT,]
-      }
-      if(input$PCTSPD!="All"){
-        data_PCT<-data_PCS[data_PCT$`Sparker Die`==input$PCTSPD,]
-      }
-      if(input$PCTSLD!="All"){
-        data_PCT<-data_PCS[data_PCT$`Slicking Die`==input$PCTSLD,]
-      }
-      if(input$PCTDLN!="All"){
-        data_PCT<-data_PCS[data_PCT$`Delamination`==input$PCTDLN,]
-      }
-      if(input$PCTULT!="All"){
-        data_PCT<-data_PCS[data_PCT$`Ultrasonic`==input$PCTULT,]
-      }
-      if(input$PCTVC!="All"){
-        data_PCT<-data_PCS[data_PCT$`Vacuum Calibration`==input$PCTVC,]
-      }
-      if(input$PCTIRD!="All"){
-        data_PCT<-data_PCS[data_PCT$`Irradiated`==input$PCTIRD,]
-      }
       data_PCT
     },
     options = list(orderClasses = TRUE,
                    columnDefs = list(list(className = 'dt-center',
                                           targets = "_all"
-                   )
-                   ),
+                                          )
+                                     ),
                    scrollX=TRUE,
                    scrollY=500,
-                   autoWidth=TRUE))
-    })
+                   autoWidth=TRUE)
+    )
+  }) 
   
-  
+
   #Create Server side of input box for Output MES---table 4
   output$OPMMN_input<-renderUI({
     selectInput("OPMMN","Material Number",c("All",unique(as.character(single_tari_data$`Material Number`))))
@@ -713,7 +661,7 @@ server <- function(input, output, session) {
       if (input$PCSPN=="All"){
         data_OPM<-single_tari_data[,input$show_vars4]
       }
-      else {data_OPM<-single_tari_data[single_tari_data$`Material Number`==input$PN,input$show_vars4]
+      else {data_OPM<-single_tari_data[single_tari_data$`Material Number`==input$PCSPN,input$show_vars4]
       }
       
       if(input$OPMMN!="All"){
@@ -770,7 +718,7 @@ server <- function(input, output, session) {
   })
   #
   
-} #end server
+}#end server
 
 # Run the application 
 shinyApp(ui = ui, server = server)

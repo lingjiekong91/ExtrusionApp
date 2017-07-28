@@ -42,6 +42,14 @@ resin_data <- read.csv(resin_pathfile, header = TRUE, stringsAsFactors = FALSE,
                        check.names = FALSE)
 screw_data <- read.csv(screw_pathfile, header = TRUE, stringsAsFactors = FALSE, 
                        check.names = FALSE)
+#Change all NA to blank
+single_pps_data[is.na(single_pps_data)]<-""
+single_tari_data[is.na(single_tari_data)]<-""
+multi_pps_data[is.na(multi_pps_data)]<-""
+tapered_pps_data[is.na(tapered_pps_data)]<-""
+resin_data[is.na(resin_data)]<-""
+screw_data[is.na(screw_data)]<-""
+
 temp=as.data.frame(matrix(0,nrow=nrow(single_tari_data),ncol=2))
 colnames(temp)=c("Start Date","Start Time")
 temp[,1:2]=str_split_fixed(single_tari_data$`Start Time`,' ',2)
@@ -58,16 +66,14 @@ Time_End<-sqldf("select Max([Start Date]) from single_tari_data")
 Time_End<-as.numeric(Time_End)
 Time_End<-as.Date(Time_End,origin="1970-01-01")
 
+#get the range of all tabs---Tapered Extrusion PPS DATA
+
+PCTDSmin=min(tapered_pps_data$`Die Size (in)`)
+PCTDSmax=max(tapered_pps_data$`Die Size (in)`)
+
 
 
 #Single Extrusion PPS Data---Special Parameter---Change the blank to No
-for (i in 26:37 ){
-  for (j in 1:nrow(single_pps_data)){
-    if(single_pps_data[j,i]==""){
-      single_pps_data[j,i]="No"
-    }
-  }
-}
 
 #Catalog--Multi Extrusion PPS Table---Fill the Partnumber and PPS number for each single row in the table
 for (i in 1:nrow(multi_pps_data)){
@@ -81,15 +87,6 @@ for (i in 1:nrow(multi_pps_data)){
 #Special Parameter---use NA to replace blank
 
 
-
-
-for (i in 35:45 ){
-  for (j in 1:nrow(tapered_pps_data)){
-    if(tapered_pps_data[j,i]=="NA"){
-      tapered_pps_data[j,i]="No"
-    }
-  }
-}
 
 
 

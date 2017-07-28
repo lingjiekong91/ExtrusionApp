@@ -9,7 +9,7 @@ library(proto)
 library(sqldf)
 
 
-ui <- fluidPage(
+ui<-fluidPage(
   # Application title
   titlePanel("Extrusion Application"),
   tabsetPanel(id = "application",
@@ -88,6 +88,10 @@ ui <- fluidPage(
                                       column(3,uiOutput("PCMRD_input")),
                                       column(3,uiOutput("PCMDS_input")),
                                       column(3,uiOutput("PCMTS_input")),
+                                      column(3,uiOutput("PCMFT_input")),
+                                      column(3,uiOutput("PCMBZT1_input")),
+                                      column(3,uiOutput("PCMBZT2_input")),
+                                      column(3,uiOutput("PCMBZT3_input")),
                                       column(3,uiOutput("PCMID_input")),
                                       column(3,uiOutput("PCMOD_input")),
                                       column(3,uiOutput("PCMIWT_input")),
@@ -102,61 +106,37 @@ ui <- fluidPage(
                                     ), #end Multi-Layered Extrusion PPS Data
                            tabPanel('Tapered Extrusion PPS Data',
                                     fluidRow(
-                                      column(3,uiOutput("PCTPN_input")),
-                                      column(3,uiOutput("PCTPD_input")),
-                                      column(3,uiOutput("PCTRN_input")),
-                                      column(3,uiOutput("PCTRD_input")),
-                                      column(3,uiOutput("PCTPPSN_input")),
-                                      #
-                                      column(3,uiOutput("PCTDS_input")),
-                                      column(3,uiOutput("PCTDLL_input")),
-                                      column(3,uiOutput("PCTTS_input")),
-                                      column(3,uiOutput("PCTTLL_input")),
-                                      column(3,uiOutput("PCTSP_input")),
-                                      #
-                                      column(3,uiOutput("PCTFT_input")),
-                                      column(3,uiOutput("PCTBZT1_input")),
-                                      column(3,uiOutput("PCTBZT2_input")),
-                                      column(3,uiOutput("PCTBZT3_input")),
-                                      column(3,uiOutput("PCTDT1_input")),
-                                      column(3,uiOutput("PCTDT2_input")),
-                                      #
-                                      column(3,uiOutput("PCTPID_input")),
-                                      column(3,uiOutput("PCTPOD_input")),
-                                      column(3,uiOutput("PCTPWT_input")),
-                                      column(3,uiOutput("PCTPOR_input")),
-                                      column(3,uiOutput("PCTPC_input")),
-                                      #
-                                      column(3,uiOutput("PCTDID_input")),
-                                      column(3,uiOutput("PCTDOD_input")),
-                                      column(3,uiOutput("PCTDWT_input")),
-                                      column(3,uiOutput("PCTDOR_input")),
-                                      column(3,uiOutput("PCTDC_input")),
-                                      #
-                                      column(3,uiOutput("PCTPL_input")),
-                                      column(3,uiOutput("PCTTL_input")),
-                                      column(3,uiOutput("PCTDL_input")),
-                                      column(3,uiOutput("PCTTL_input")),
-                                      column(3,uiOutput("PCTPPD_input")),
-                                      #
-                                      column(3,uiOutput("PCTNEXIV_input")),
-                                      column(3,uiOutput("PCTAnnealed_input")),
-                                      column(3,uiOutput("PCTCaliper_input")),
-                                      column(3,uiOutput("PCTOS_input")),
-                                      column(3,uiOutput("PCTMP_input")),
-                                      #
-                                      column(3,uiOutput("PCTHT_input")),
-                                      column(3,uiOutput("PCTSPD_input")),
-                                      column(3,uiOutput("PCTSLD_input")),
-                                      column(3,uiOutput("PCTDLN_input")),
-                                      column(3,uiOutput("PCTULT_input")),
-                                      column(3,uiOutput("PCTVC_input")),
-                                      column(3,uiOutput("PCTIRD_input"))
-                                    ),
+                                      column(4,
+                                             fluidRow(uiOutput("PCTPN_input")),
+                                             fluidRow(uiOutput("PCTPD_input")),
+                                             fluidRow(uiOutput("PCTRN_input")),
+                                             fluidRow(uiOutput("PCTRD_input")),
+                                             fluidRow(uiOutput("PCTPPSN_input"))
+                                             ),
+                                      column(4,
+                                             fluidRow(
+                                               column(6,uiOutput("PCTDS_min_input")),
+                                               column(6,uiOutput("PCTDS_max_input"))
+                                               ),
+                                             fluidRow(uiOutput("PCTDLL_input")),
+                                             fluidRow(uiOutput("PCTTS_input")),
+                                             fluidRow(uiOutput("PCTTLL_input")),
+                                             fluidRow(uiOutput("PCTSP_input"))
+                                             ),
+                                      column(4,
+                                             fluidRow(uiOutput("PCTFT_input")),
+                                             fluidRow(uiOutput("PCTBZT1_input")),
+                                             fluidRow(uiOutput("PCTBZT2_input")),
+                                             fluidRow(uiOutput("PCTBZT3_input")),
+                                             fluidRow(uiOutput("PCTDT1_input")),
+                                             fluidRow(uiOutput("PCTDT2_input"))
+                                             )
+                                      ),
                                     fluidRow(
                                       DT::dataTableOutput('mytable3')
+                                      )
                                     )
-                           )  #end Tapered Extrusion PPS Data
+                           #end Tapered Extrusion PPS Data
                            )#end tabsetPanel
                          )#end mainPanel
                        ),#end tabPanel
@@ -204,5 +184,5 @@ ui <- fluidPage(
                            )
                          ) #end mainPanel
                        ) #end tabPanel for 'Extra'
-              )#end tabsetPanel for part catalog
+              ) #end for every tab
   ) #end fluidPage
