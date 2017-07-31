@@ -25,55 +25,60 @@ ui<-fluidPage(
                        mainPanel(
                          tabsetPanel(
                            id = 'dataset',
-                           tabPanel('Single Extrusion PPS Data', 
+                           tabPanel('Single Extrusion PPS Data',
+                                    fluidRow(tags$h1(strong("Part Resin"),align="left"),
+                                      column(2,uiOutput("PCSPN_input")),
+                                      column(3,uiOutput("PCSPD_input")),
+                                      column(2,uiOutput("PCSRN_input")),
+                                      column(2,uiOutput("PCSRD_input")),
+                                      column(2,uiOutput("PCSPPSN_input"))
+                                      ),
+                                    fluidRow(tags$h1(strong("Tooling"),align="left"),
+                                      column(2,uiOutput("PCSDS_input")),
+                                      column(2,uiOutput("PCSDLL_input")),
+                                      column(2,uiOutput("PCSTS_input")),
+                                      column(2,uiOutput("PCSTLL_input")),
+                                      column(2,uiOutput("PCSSP_input"))
+                                      ),
+                                    fluidRow(tags$h1(strong("Attributes"),align="left"),
+                                      column(3,uiOutput("PCSFT_input")),
+                                      column(3,uiOutput("PCSBZT1_input")),
+                                      column(3,uiOutput("PCSBZT2_input")),
+                                      column(3,uiOutput("PCSBZT3_input"))
+                                      ),
+                                    fluidRow(#Attributes_2
+                                      column(3,uiOutput("PCSCT_input")),
+                                      column(3,uiOutput("PCSAT_input")),
+                                      column(3,uiOutput("PCSDT1_input")),
+                                      column(3,uiOutput("PCSDT2_input"))
+                                      ),
+                                    fluidRow(#
+                                      column(3,uiOutput("PCSIDI_input")),
+                                      column(3,uiOutput("PCSODI_input")),
+                                      column(3,uiOutput("PCSWT_input")),
+                                      column(3,uiOutput("PCSOR_input"))
+                                      ),
                                     fluidRow(
-                                      column(8,
-                                             fluidRow(
-                                               column(3,uiOutput("PCSPN_input")),
-                                               column(3,uiOutput("PCSPD_input")),
-                                               column(3,uiOutput("PCSRN_input")),
-                                               column(3,uiOutput("PCSRD_input"))
-                                               ),
-                                             fluidRow(
-                                               column(3,uiOutput("PCSPPSN_input")),
-                                               column(3,uiOutput("PCSDS_input")),
-                                               column(3,uiOutput("PCSTS_input")),
-                                               column(3,uiOutput("PCSSP_input"))
-                                               ),
-                                             fluidRow(
-                                               column(3,uiOutput("PCSIDI_input")),
-                                               column(3,uiOutput("PCSODI_input")),
-                                               column(3,uiOutput("PCSWT_input")),
-                                               column(3,uiOutput("PCSOR_input"))
-                                               ),
-                                             fluidRow(
-                                               column(3,uiOutput("PCSCCT_input")),
-                                               column(3,uiOutput("PCSLength_input")),
-                                               column(3,uiOutput("PCSPPD_input"))
-                                               )
-                                             ),
-                                      column(4,
-                                             fluidRow(
-                                               column(4,uiOutput("PCSNEXIV_input")),
-                                               column(4,uiOutput("PCSAnnealed_input")),
-                                               column(4,uiOutput("PCSCaliper_input"))
-                                               ),
-                                             fluidRow(
-                                               column(4,uiOutput("PCSOS_input")),
-                                               column(4,uiOutput("PCSMP_input")),
-                                               column(4,uiOutput("PCSHT_input"))
-                                               ),
-                                             fluidRow(
-                                               column(4,uiOutput("PCSSPD_input")),
-                                               column(4,uiOutput("PCSSLD_input")),
-                                               column(4,uiOutput("PCSDLN_input"))
-                                               ),
-                                             fluidRow(
-                                               column(4,uiOutput("PCSULT_input")),
-                                               column(5,uiOutput("PCSVC_input")),
-                                               column(3,uiOutput("PCSIRD_input"))
-                                               )
-                                             )
+                                      column(3,uiOutput("PCSCCT_input")),
+                                      column(3,uiOutput("PCSLength_input")),
+                                      column(3,uiOutput("PCSPPD_input"))
+                                      ),
+                                    
+                                    fluidRow(tags$h1(strong("Special"),align="left"),
+                                      column(2,uiOutput("PCSNEXIV_input")),
+                                      column(2,uiOutput("PCSAnnealed_input")),
+                                      column(2,uiOutput("PCSCaliper_input")),
+                                      column(2,uiOutput("PCSOS_input")),
+                                      column(2,uiOutput("PCSMP_input")),
+                                      column(2,uiOutput("PCSHT_input"))
+                                      ),
+                                    fluidRow(
+                                      column(2,uiOutput("PCSSPD_input")),
+                                      column(2,uiOutput("PCSSLD_input")),
+                                      column(2,uiOutput("PCSDLN_input")),
+                                      column(2,uiOutput("PCSULT_input")),
+                                      column(2,uiOutput("PCSVC_input")),
+                                      column(2,uiOutput("PCSIRD_input"))
                                       ),
                                     fluidRow(
                                       DT::dataTableOutput("mytable1"),
@@ -106,32 +111,42 @@ ui<-fluidPage(
                                     ), #end Multi-Layered Extrusion PPS Data
                            tabPanel('Tapered Extrusion PPS Data',
                                     fluidRow(
-                                      column(4,
-                                             fluidRow(uiOutput("PCTPN_input")),
-                                             fluidRow(uiOutput("PCTPD_input")),
-                                             fluidRow(uiOutput("PCTRN_input")),
-                                             fluidRow(uiOutput("PCTRD_input")),
-                                             fluidRow(uiOutput("PCTPPSN_input"))
+                                      column(2,uiOutput("PCTPN_input")),
+                                      column(2,uiOutput("PCTPD_input")),
+                                      column(2,uiOutput("PCTRN_input")),
+                                      column(2,uiOutput("PCTRD_input")),
+                                      column(2,uiOutput("PCTPPSN_input"))
                                              ),
-                                      column(4,
-                                             fluidRow(
-                                               column(6,uiOutput("PCTDS_min_input")),
-                                               column(6,uiOutput("PCTDS_max_input"))
-                                               ),
-                                             fluidRow(uiOutput("PCTDLL_input")),
-                                             fluidRow(uiOutput("PCTTS_input")),
-                                             fluidRow(uiOutput("PCTTLL_input")),
-                                             fluidRow(uiOutput("PCTSP_input"))
-                                             ),
-                                      column(4,
-                                             fluidRow(uiOutput("PCTFT_input")),
-                                             fluidRow(uiOutput("PCTBZT1_input")),
-                                             fluidRow(uiOutput("PCTBZT2_input")),
-                                             fluidRow(uiOutput("PCTBZT3_input")),
-                                             fluidRow(uiOutput("PCTDT1_input")),
-                                             fluidRow(uiOutput("PCTDT2_input"))
-                                             )
+                                    fluidRow(
+                                      column(1,uiOutput("PCTDS_min_input")),
+                                      column(1,uiOutput("PCTDS_max_input")),
+                                      column(2,uiOutput("PCTDLL_input")),
+                                      column(2,uiOutput("PCTTS_input")),
+                                      column(2,uiOutput("PCTTLL_input")),
+                                      column(2,uiOutput("PCTSP_input"))
                                       ),
+                                    fluidRow(
+                                      column(2,uiOutput("PCTFT_input")),
+                                      column(2,uiOutput("PCTBZT1_input")),
+                                      column(2,uiOutput("PCTBZT2_input")),
+                                      column(2,uiOutput("PCTBZT3_input")),
+                                      column(2,uiOutput("PCTDT1_input")),
+                                      column(2,uiOutput("PCTDT2_input"))
+                                      ),
+                                    fluidRow(
+                                      column(2,uiOutput("PCTPID_input")),
+                                      column(2,uiOutput("PCTPOD_input")),
+                                      column(2,uiOutput("PCTPWT_input")),
+                                      column(2,uiOutput("PCTPOR_input")),
+                                      column(2,uiOutput("PCTPC_input"))
+                                      ),
+                                    fluidRow(
+                                       column(2,uiOutput("PCTDID_input")),
+                                       column(2,uiOutput("PCTDOD_input")),
+                                       column(2,uiOutput("PCTDWT_input")),
+                                       column(2,uiOutput("PCTDOR_input")),
+                                       column(2,uiOutput("PCTDC_input"))
+                                       ),
                                     fluidRow(
                                       DT::dataTableOutput('mytable3')
                                       )

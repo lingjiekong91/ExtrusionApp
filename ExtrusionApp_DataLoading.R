@@ -1,5 +1,5 @@
 #This R code is used to load csv or xls file into R. And clean the raw data based on demand.
-
+#And we need to add more code to update our database daily
 library(shiny)
 library(bootstrap)
 library(jpeg)
