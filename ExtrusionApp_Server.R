@@ -58,169 +58,175 @@ server<-function(input, output, session) {
   
   #Part Resin
   output$PCSPN_input<-renderUI({
-    selectizeInput("PCSPN","Part Number",multiple=TRUE,
+    selectizeInput("PCSPN",label = NULL,multiple=TRUE,
                    c("All",unique(as.character(single_pps_data$`Part Number`))),
                    selected="All")
   })
   output$PCSPD_input<-renderUI({
-    selectInput("PCSPD","Part Description",
+    selectInput("PCSPD",label = NULL,
                 c("All",unique(as.character(single_pps_data$`Part Description`))))
   })
   output$PCSRN_input<-renderUI({
-    selectInput("PCSRN","Resin Number",
+    selectInput("PCSRN",label = NULL,
                 c("All",unique(as.character(single_pps_data$`Resin Number`))))
   })
   output$PCSRD_input<-renderUI({
-    selectInput("PCSRD","Resin Description",
+    selectInput("PCSRD",label = NULL,
                 c("All",unique(as.character(single_pps_data$`Resin Description`))))
   })
   output$PCSPPSN_input<-renderUI({
-    selectInput("PCSPPSN","PPS Number",
+    selectInput("PCSPPSN",label = NULL,
                 c("All",unique(as.character(single_pps_data$`PPS Number`))))
   })
   
   #Tooling
-  output$PCSDS_input<-renderUI({
-    DS_min=-1
-    DS_max=0.54
-    sliderInput("PCSDS","Die Size(in)",min=DS_min,max=DS_max,value=c(DS_min,DS_max))
+  output$PCSDS_min_input<-renderUI({
+    numericInput("PCSDS_min",label = NULL,value=PCSDSmin,step=0.001)
+  })
+  output$PCSDS_max_input<-renderUI({
+    numericInput("PCSDS_max",label = NULL,value=PCSDSmax,step=0.001)
   })
   output$PCSDLL_input<-renderUI({
     DLL_min=-1
     DLL_max=0.54
-    sliderInput("PCSDLL","Die Land Length (in)",min=DLL_min,max=DLL_max,value=c(DLL_min,DLL_max))
+    selectInput("PCSDLL",label = NULL,c("All",unique(as.character(single_pps_data$`Die Land Length (in)`))))
   })
-  output$PCSTS_input<-renderUI({
-    TS_min=-1
-    TS_max=0.49
-    sliderInput("PCSTS","Tip Size(in)",min=TS_min,max=TS_max,value=c(TS_min,TS_max))
+  output$PCSTS_min_input<-renderUI({
+    numericInput("PCSTS_min",label = NULL,value=PCSTSmin,step=0.001)
+  })
+  output$PCSTS_max_input<-renderUI({
+    numericInput("PCSTS_max",label = NULL,value=PCSTSmax,step=0.001)
   })
   output$PCSTLL_input<-renderUI({
     TLL_min=-1
     TLL_max=0.49
-    sliderInput("PCSTLL","Tip Land Length (in)",min=TLL_min,max=TLL_max,value=c(TLL_min,TLL_max))
+    selectInput("PCSTLL",label = NULL,c("All",unique(as.character(single_pps_data$`Tip Land Length (in)`))))
   })
   output$PCSSP_input<-renderUI({
-    selectInput("PCSSP","Screw Print",
+    selectInput("PCSSP",label = NULL,
                 c("All",unique(as.character(single_pps_data$`Screw Print`))))
   })
   
   #Attributes_1
-  output$PCSFT_input<-renderUI({
-    FT_min=-1
-    FT_max=0.49
-    sliderInput("PCSFT","Feedthroat Temperature F",min=FT_min,max=FT_max,value=c(FT_min,FT_max))
+  output$PCSFT_min_input<-renderUI({
+    numericInput("PCSFT_min",label = NULL,value = PCSFTmin,step=1)
   })
-  output$PCSBZT1_input<-renderUI({
-    BZT1_min=-1
-    BZT1_max=0.49
-    sliderInput("PCSBZT1","Barrel Zone 1 Temperature",min=BZT1_min,max=BZT1_max,value=c(BZT1_min,BZT1_max))
+  output$PCSFT_max_input<-renderUI({
+    numericInput("PCSFT_max",label = NULL,value=PCSFTmax,step=1)
   })
-  output$PCSBZT2_input<-renderUI({
-    BZT2_min=-1
-    BZT2_max=0.49
-    sliderInput("PCSBZT2","Barrel Zone 2 Temperature",min=BZT2_min,max=BZT2_max,value=c(BZT2_min,BZT2_max))
+  output$PCSBZT1_min_input<-renderUI({
+    numericInput("PCSBZT1_min",label = NULL,value=PCSBZT1min,step=5)
   })
-  output$PCSBZT3_input<-renderUI({
-    BZT3_min=-1
-    BZT3_max=0.49
-    sliderInput("PCSBZT3","Barrel Zone 3 Temperature",min=BZT3_min,max=BZT3_max,value=c(BZT3_min,BZT3_max))
+  output$PCSBZT1_max_input<-renderUI({
+    numericInput("PCSBZT1_max",label = NULL,value=PCSBZT1max,step=5)
+  })
+  output$PCSBZT2_min_input<-renderUI({
+    numericInput("PCSBZT2_min",label = NULL,value=PCSBZT2min,step=5)
+  })
+  output$PCSBZT2_max_input<-renderUI({
+    numericInput("PCSBZT2_max",label = NULL,value=PCSBZT2max,step=5)
+  })
+  output$PCSBZT3_min_input<-renderUI({
+    numericInput("PCSBZT3_min",label = NULL,value=PCSBZT3min,step=5)
+  })
+  output$PCSBZT3_max_input<-renderUI({
+    numericInput("PCSBZT3_max",label = NULL,value=PCSBZT3max,step=5)
   })
   
   #Attrobites_2
   output$PCSCT_input<-renderUI({
     CT_min=-1
     CT_max=0.49
-    sliderInput("PCSCT","Clamp Temperature",min=CT_min,max=CT_max,value=c(CT_min,CT_max))
+    sliderInput("PCSCT",label = NULL,min=CT_min,max=CT_max,value=c(CT_min,CT_max))
   })
   output$PCSAT_input<-renderUI({
     AT_min=-1
     AT_max=0.49
-    sliderInput("PCSAT","Adapter Temperature",min=AT_min,max=AT_max,value=c(AT_min,AT_max))
+    sliderInput("PCSAT",label = NULL,min=AT_min,max=AT_max,value=c(AT_min,AT_max))
   })
   output$PCSDT1_input<-renderUI({
     DT1_min=-1
     DT1_max=0.49
-    sliderInput("PCSDT1","Die 1 Temperature",min=DT1_min,max=DT1_max,value=c(DT1_min,DT1_max))
+    sliderInput("PCSDT1",label = NULL,min=DT1_min,max=DT1_max,value=c(DT1_min,DT1_max))
   })
   output$PCSDT2_input<-renderUI({
     DT2_min=-1
     DT2_max=0.49
-    sliderInput("PCSDT2","Die 2 Temperature",min=DT2_min,max=DT2_max,value=c(DT2_min,DT2_max))
+    sliderInput("PCSDT2",label = NULL,min=DT2_min,max=DT2_max,value=c(DT2_min,DT2_max))
   })
 #Temps
   output$PCSIDI_input<-renderUI({
     IDI_min=0.0009
     IDI_max=0.353
-    sliderInput("PCSIDI","Inner Diameter(in)",min=IDI_min,max=IDI_max,value=c(IDI_min,IDI_max),sep="",round=-4)
+    sliderInput("PCSIDI",label = NULL,min=IDI_min,max=IDI_max,value=c(IDI_min,IDI_max),sep="",round=-4)
   })
   output$PCSODI_input<-renderUI({
     ODI_min=0.0133
     ODI_max=0.495
-    sliderInput("PCSODI","Out Diameter(in)",min=ODI_min,max=ODI_max,value=c(ODI_min,ODI_max),sep="",round=-4)
+    sliderInput("PCSODI",label = NULL,min=ODI_min,max=ODI_max,value=c(ODI_min,ODI_max),sep="",round=-4)
   })
   output$PCSWT_input<-renderUI({
     WT_min=0.0005
     WT_max=0.053
-    sliderInput("PCSWT","Wall Thickness(in)",min=WT_min,max=WT_max,value=c(WT_min,WT_max),sep="",round=-4)
+    sliderInput("PCSWT",label = NULL,min=WT_min,max=WT_max,value=c(WT_min,WT_max),sep="",round=-4)
   })
   output$PCSOR_input<-renderUI({
     OR_min=0
     OR_max=0.01
-    sliderInput("PCSOR","Out of Roundness(in)",min=OR_min,max=OR_max,value=c(OR_min,OR_max),sep="",round=-4)
+    sliderInput("PCSOR",label = NULL,min=OR_min,max=OR_max,value=c(OR_min,OR_max),sep="",round=-4)
   })
   output$PCSCCT_input<-renderUI({
     CCT_min=1
     CCT_max=2
-    sliderInput("PCSCCT","Concentricity(in)",min=CCT_min,max=CCT_max,value=c(CCT_min,CCT_max),sep="",round=-4)
+    sliderInput("PCSCCT",label = NULL,min=CCT_min,max=CCT_max,value=c(CCT_min,CCT_max),sep="",round=-4)
   })
   output$PCSLength_input<-renderUI({
     Length_min=0.015
     Length_max=1
-    sliderInput("PCSLength","Length(in)",min=Length_min,max=Length_max,value=c(Length_min,Length_max),sep="",round=-4)
+    sliderInput("PCSLength",label = NULL,min=Length_min,max=Length_max,value=c(Length_min,Length_max),sep="",round=-4)
   })
   output$PCSPPD_input<-renderUI({
-    selectInput("PCSPPD","Perpendicularity(in)",
+    selectInput("PCSPPD",label = NULL,
                 c("All",unique(as.character(single_pps_data$`Perpendicularity (in)`))))
   })
   
   #Special_1
   output$PCSNEXIV_input<-renderUI({
-    selectInput("PCSNEXIV","NEXIV",choices=c("All","yes","NA"))
+    selectInput("PCSNEXIV",label = NULL,choices=c("All","yes","NA"))
   })
   output$PCSAnnealed_input<-renderUI({
-    selectInput("PCSAnnealed","Annealed",choices=c("All","yes","NA"))
+    selectInput("PCSAnnealed",label = NULL,choices=c("All","yes","NA"))
   })
   output$PCSCaliper_input<-renderUI({
-    selectInput("PCSCaliper","Caliper",choices=c("All","yes","NA"))
+    selectInput("PCSCaliper",label = NULL,choices=c("All","yes","NA"))
   })
   output$PCSOS_input<-renderUI({
-    selectInput("PCSOS","OD Sort",choices=c("All","yes","NA"))
+    selectInput("PCSOS",label = NULL,choices=c("All","yes","NA"))
   })
   output$PCSMP_input<-renderUI({
-    selectInput("PCSMP","Melt Pump",choices=c("All","yes","NA"))
+    selectInput("PCSMP",label = NULL,choices=c("All","yes","NA"))
   })
   output$PCSHT_input<-renderUI({
-    selectInput("PCSHT","Hypo Tip",choices=c("All","yes","NA"))
+    selectInput("PCSHT",label = NULL,choices=c("All","yes","NA"))
   })
   #Special_2
   output$PCSSPD_input<-renderUI({
-    selectInput("PCSSPD","Spark Die",choices=c("All","yes","NA"))
+    selectInput("PCSSPD",label = NULL,choices=c("All","yes","NA"))
   })
   output$PCSSLD_input<-renderUI({
-    selectInput("PCSSLD","Slicking Die",choices=c("All","yes","NA"))
+    selectInput("PCSSLD",label = NULL,choices=c("All","yes","NA"))
   })
   output$PCSDLN_input<-renderUI({
-    selectInput("PCSDLN","Delamination",choices=c("All","yes","NA"))
+    selectInput("PCSDLN",label = NULL,choices=c("All","yes","NA"))
   })
   output$PCSULT_input<-renderUI({
-    selectInput("PCSULT","Ultrasonic",choices=c("All","yes","NA"))
+    selectInput("PCSULT",label = NULL,choices=c("All","yes","NA"))
   })
   output$PCSVC_input<-renderUI({
-    selectInput("PCSVC","Vacuum Calibration",choices=c("All","yes","NA"))
+    selectInput("PCSVC",label = NULL,choices=c("All","yes","NA"))
   })
   output$PCSIRD_input<-renderUI({
-    selectInput("PCSIRD","Irradiated",choices=c("All","yes","NA"))
+    selectInput("PCSIRD",label = NULL,choices=c("All","yes","NA"))
   })
   
   #Create Server side of Part Catalog Single Extrusion PPS Data's table-----mytable1 
@@ -242,20 +248,43 @@ server<-function(input, output, session) {
       if(input$PCSPPSN!="All"){
         data_PCS<-data_PCS[data_PCS$`PPS Number`==input$PCSPPSN,]
       }
-      #Die Size#Tip Size
+      if(input$PCSDS_min!=PCSDSmin || input$PCSDS_max!=PCSDSmax){
+        data_PCS<-data_PCS[data_PCS$`Die Size (in)`>=input$PCSDS_min & data_PCS$`Die Size (in)`<=input$PCSDS_max,]
+      }
+      if(input$PCSDLL!="All"){
+        data_PCS<-data_PCS[data_PCS$`Die Land Length (in)`==input$PCSDLL,]
+      }
+      if(input$PCSTS_min!=PCSTSmin || input$PCSTS_max!=PCSTSmax){
+        data_PCS<-data_PCS[data_PCS$`Die Size (in)`>=input$PCSTS_min & data_PCS$`Die Size (in)`<=input$PCSTS_max,]
+      }
+      if(input$PCSTLL!="All"){
+        data_PCS<-data_PCS[data_PCS$`Tip Land Length (in)`==input$PCSTLL,]
+      }      
       if(input$PCSSP!="All"){
         data_PCS<-data_PCS[data_PCS$`Screw Print`==input$PCSSP,]
       }
-      #IDI#ODI#WT#OR#CCT#Length
-      if(input$PCSPPD!="All"){
-        data_PCS<-data_PCS[data_PCS$`Perpendicularity (in)`==input$PCSPPD,]
+      
+      
+      
+      if(input$PCSFT_min!=PCSFTmin || input$PCSFT_max!=PCSFTmax){
+        data_PCS<-data_PCS[data_PCS$`Feedthroat Temperature  F`>=input$PCSFT_min & data_PCS$`Feedthroat Temperature  F`<=input$PCSFT_max,]
       }
+      if(input$PCSBZT1_min!=PCSBZT1min || input$PCSBZT1_max!=PCSBZT1max){
+        data_PCS<-data_PCS[data_PCS$`Barrel Zone 1 Temperature  F`>=input$PCSBZT1_min & data_PCS$`Barrel Zone 1 Temperature  F`<=input$PCSBZT1_max,]
+      }
+      if(input$PCSBZT1_min!=PCSBZT1min || input$PCSBZT1_max!=PCSBZT1max){
+        data_PCS<-data_PCS[data_PCS$`Barrel Zone 2 Temperature  F`>=input$PCSBZT2_min & data_PCS$`Barrel Zone 2 Temperature  F`<=input$PCSBZT2_max,]
+      }
+      if(input$PCSBZT3_min!=PCSBZT3min || input$PCSBZT3_max!=PCSBZT3max){
+        data_PCS<-data_PCS[data_PCS$`Barrel Zone 3 Temperature  F`>=input$PCSBZT3_min & data_PCS$`Barrel Zone 3 Temperature  F`<=input$PCSBZT3_max,]
+      }
+       
       if(input$PCSNEXIV!="All"){
         if(input$PCSNEXIV=="yes"){
           data_PCS<-data_PCS[data_PCS$`NEXIV`=="yes",]
         } else{
           data_PCS<-data_PCS[data_PCS$`NEXIV`=="",]
-          }
+        }
       }
       if(input$PCSAnnealed!="All"){
         if(input$PCSAnnealed=="yes"){
@@ -334,6 +363,7 @@ server<-function(input, output, session) {
           data_PCS<-data_PCS[data_PCS$`Irradiated`=="",]
         }
       }
+      
       data_PCS
     },
     options = list(orderClasses = TRUE, 
@@ -353,7 +383,7 @@ server<-function(input, output, session) {
   # output$Summary1<-renderPrint({printFun<-printFun1()  printFun })
   
   
-  #create Server side of input box for Part Catalog Multi-Layered Extrusion PPS Data
+  #create Server side of input box for Part Catalog Multi-Layered Extrusion PPS Data----table 2
   output$PCMPN_input<-renderUI({
     selectizeInput("PCMPN","Part Number",
                    c("All",unique(as.character(multi_pps_data$`Part Number`))),
@@ -524,30 +554,30 @@ server<-function(input, output, session) {
   })
   
   output$PCTDS_min_input<-renderUI({
-    numericInput("PCTDS_min","min",value=PCTDSmin,step=0.001)
+    numericInput("PCTDS_min",label = NULL,value=PCTDSmin,step=0.001)
   })
   output$PCTDS_max_input<-renderUI({
-    numericInput("PCTDS_max","max",value=PCTDSmax,step=0.001)
+    numericInput("PCTDS_max",label = NULL,value=PCTDSmax,step=0.001)
   })
   
   output$PCTDLL_input<-renderUI({
     DLL_min=-1
     DLL_max=0.54
-    sliderInput("PCTDLL","Die Land Length (in)",min=DLL_min,max=DLL_max,value=c(DLL_min,DLL_max))
+    sliderInput("PCTDLL",label = NULL,min=DLL_min,max=DLL_max,value=c(DLL_min,DLL_max))
   })
   output$PCTTS_input<-renderUI({
     TS_min=-1
     TS_max=0.49
-    sliderInput("PCTTS","Tip Size(in)",min=TS_min,max=TS_max,value=c(TS_min,TS_max))
+    sliderInput("PCTTS",label = NULL,min=TS_min,max=TS_max,value=c(TS_min,TS_max))
   })
   output$PCTTLL_input<-renderUI({
     TLL_min=-1
     TLL_max=0.49
-    sliderInput("PCTTLL","Tip Land Length (in)",min=TLL_min,max=TLL_max,value=c(TLL_min,TLL_max))
+    sliderInput("PCTTLL",label = NULL,min=TLL_min,max=TLL_max,value=c(TLL_min,TLL_max))
   })
   
   output$PCTSP_input<-renderUI({
-    selectInput("PCTSP","Screw Print",
+    selectInput("PCTSP",label = NULL,
                 c("All",unique(as.character(tapered_pps_data$`Screw Print`))))
   })
   
@@ -689,7 +719,7 @@ server<-function(input, output, session) {
   output$PCTULT_input<-renderUI({
     selectInput("PCTULT","Ultrasonic",choices=c("All","yes","No"))
   })
-  output$PCSVC_input<-renderUI({
+  output$PCTVC_input<-renderUI({
     selectInput("PCSVC","Vacuum Calibration",choices=c("All","yes","No"))
   })
   output$PCTIRD_input<-renderUI({
