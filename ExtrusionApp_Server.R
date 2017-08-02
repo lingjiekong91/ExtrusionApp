@@ -134,56 +134,66 @@ server<-function(input, output, session) {
   })
   
   #Attrobites_2
-  output$PCSCT_input<-renderUI({
-    CT_min=-1
-    CT_max=0.49
-    sliderInput("PCSCT",label = NULL,min=CT_min,max=CT_max,value=c(CT_min,CT_max))
+  output$PCSCT_min_input<-renderUI({
+    numericInput("PCSCT_min",label = NULL,value=PCSCTmin,step=5)
   })
-  output$PCSAT_input<-renderUI({
-    AT_min=-1
-    AT_max=0.49
-    sliderInput("PCSAT",label = NULL,min=AT_min,max=AT_max,value=c(AT_min,AT_max))
+  output$PCSCT_max_input<-renderUI({
+    numericInput("PCSCT_max",label = NULL,value=PCSCTmax,step=5)
   })
-  output$PCSDT1_input<-renderUI({
-    DT1_min=-1
-    DT1_max=0.49
-    sliderInput("PCSDT1",label = NULL,min=DT1_min,max=DT1_max,value=c(DT1_min,DT1_max))
+  output$PCSAT_min_input<-renderUI({
+    numericInput("PCSAT_min",label = NULL,value=PCSATmin,step=5)
   })
-  output$PCSDT2_input<-renderUI({
-    DT2_min=-1
-    DT2_max=0.49
-    sliderInput("PCSDT2",label = NULL,min=DT2_min,max=DT2_max,value=c(DT2_min,DT2_max))
+  output$PCSAT_max_input<-renderUI({
+    numericInput("PCSAT_max",label = NULL,value=PCSATmax,step=5)
+  })
+  output$PCSDT1_min_input<-renderUI({
+    numericInput("PCSDT1_min",label = NULL,value=PCSDT1min,step=5)
+  })
+  output$PCSDT1_max_input<-renderUI({
+    numericInput("PCSDT1_max",label = NULL,value=PCSDT1max,step=5)
+  })
+  output$PCSDT2_min_input<-renderUI({
+    numericInput("PCSDT2_min",label = NULL,value=PCSDT2min,step=5)
+  })
+  output$PCSDT2_max_input<-renderUI({
+    numericInput("PCSDT2_max",label = NULL,value=PCSDT2max,step=5)
   })
 #Temps
-  output$PCSIDI_input<-renderUI({
-    IDI_min=0.0009
-    IDI_max=0.353
-    sliderInput("PCSIDI",label = NULL,min=IDI_min,max=IDI_max,value=c(IDI_min,IDI_max),sep="",round=-4)
+  output$PCSIDI_min_input<-renderUI({
+    numericInput("PCSIDI_min",label = NULL,value=PCSIDImin,step=0.001)
   })
-  output$PCSODI_input<-renderUI({
-    ODI_min=0.0133
-    ODI_max=0.495
-    sliderInput("PCSODI",label = NULL,min=ODI_min,max=ODI_max,value=c(ODI_min,ODI_max),sep="",round=-4)
+  output$PCSIDI_max_input<-renderUI({
+    numericInput("PCSIDI_max",label = NULL,value=PCSIDImax,step=0.001)
   })
-  output$PCSWT_input<-renderUI({
-    WT_min=0.0005
-    WT_max=0.053
-    sliderInput("PCSWT",label = NULL,min=WT_min,max=WT_max,value=c(WT_min,WT_max),sep="",round=-4)
+  output$PCSODI_min_input<-renderUI({
+    numericInput("PCSODI_min",label = NULL,value=PCSODImin,step=0.001)
   })
-  output$PCSOR_input<-renderUI({
-    OR_min=0
-    OR_max=0.01
-    sliderInput("PCSOR",label = NULL,min=OR_min,max=OR_max,value=c(OR_min,OR_max),sep="",round=-4)
+  output$PCSODI_max_input<-renderUI({
+    numericInput("PCSODI_max",label = NULL,value=PCSODImax,step=0.001)
   })
-  output$PCSCCT_input<-renderUI({
-    CCT_min=1
-    CCT_max=2
-    sliderInput("PCSCCT",label = NULL,min=CCT_min,max=CCT_max,value=c(CCT_min,CCT_max),sep="",round=-4)
+  output$PCSWT_min_input<-renderUI({
+    numericInput("PCSWT_min",label = NULL,value=PCSWTmin,step=0.001)
   })
-  output$PCSLength_input<-renderUI({
-    Length_min=0.015
-    Length_max=1
-    sliderInput("PCSLength",label = NULL,min=Length_min,max=Length_max,value=c(Length_min,Length_max),sep="",round=-4)
+  output$PCSWT_max_input<-renderUI({
+    numericInput("PCSWT_max",label = NULL,value=PCSWTmax,step=0.001)
+  })
+  output$PCSOR_min_input<-renderUI({
+    numericInput("PCSOR_min",label = NULL,value=PCSORmin,step=0.001)
+  })
+  output$PCSOR_max_input<-renderUI({
+    numericInput("PCSOR_max",label = NULL,value=PCSORmax,step=0.001)
+  })
+  output$PCSCCT_min_input<-renderUI({
+    numericInput("PCSCCT_min",label = NULL,value=PCSCCTmin,step=0.0001)
+  })
+  output$PCSCCT_max_input<-renderUI({
+    numericInput("PCSCCT_max",label = NULL,value=PCSCCTmax,step=0.0001)
+  })
+  output$PCSLength_min_input<-renderUI({
+    numericInput("PCSLength_min",label = NULL,value=PCSLengthmin,step=1)
+  })
+  output$PCSLength_max_input<-renderUI({
+    numericInput("PCSLength_max",label = NULL,value=PCSLengthmax,step=1)
   })
   output$PCSPPD_input<-renderUI({
     selectInput("PCSPPD",label = NULL,
@@ -229,6 +239,8 @@ server<-function(input, output, session) {
     selectInput("PCSIRD",label = NULL,choices=c("All","yes","NA"))
   })
   
+  
+  
   #Create Server side of Part Catalog Single Extrusion PPS Data's table-----mytable1 
   output$mytable1 <- DT::renderDataTable({
     DT::datatable({
@@ -263,21 +275,54 @@ server<-function(input, output, session) {
       if(input$PCSSP!="All"){
         data_PCS<-data_PCS[data_PCS$`Screw Print`==input$PCSSP,]
       }
-      
-      
-      
       if(input$PCSFT_min!=PCSFTmin || input$PCSFT_max!=PCSFTmax){
         data_PCS<-data_PCS[data_PCS$`Feedthroat Temperature  F`>=input$PCSFT_min & data_PCS$`Feedthroat Temperature  F`<=input$PCSFT_max,]
       }
       if(input$PCSBZT1_min!=PCSBZT1min || input$PCSBZT1_max!=PCSBZT1max){
         data_PCS<-data_PCS[data_PCS$`Barrel Zone 1 Temperature  F`>=input$PCSBZT1_min & data_PCS$`Barrel Zone 1 Temperature  F`<=input$PCSBZT1_max,]
       }
-      if(input$PCSBZT1_min!=PCSBZT1min || input$PCSBZT1_max!=PCSBZT1max){
+      if(input$PCSBZT2_min!=PCSBZT2min || input$PCSBZT2_max!=PCSBZT2max){
         data_PCS<-data_PCS[data_PCS$`Barrel Zone 2 Temperature  F`>=input$PCSBZT2_min & data_PCS$`Barrel Zone 2 Temperature  F`<=input$PCSBZT2_max,]
       }
       if(input$PCSBZT3_min!=PCSBZT3min || input$PCSBZT3_max!=PCSBZT3max){
         data_PCS<-data_PCS[data_PCS$`Barrel Zone 3 Temperature  F`>=input$PCSBZT3_min & data_PCS$`Barrel Zone 3 Temperature  F`<=input$PCSBZT3_max,]
       }
+      
+      
+      
+      if(input$PCSCT_min!=PCSCTmin || input$PCSCT_max!=PCSCTmax){
+        data_PCS<-data_PCS[data_PCS$`Clamp Temperature  F`>=input$PCSCT_min & data_PCS$`Clamp Temperature  F`<=input$PCSCT_max,]
+      }
+      if(input$PCSAT_min!=PCSATmin || input$PCSAT_max!=PCSATmax){
+        data_PCS<-data_PCS[data_PCS$`Adapter Temperature  F`>=input$PCSAT_min & data_PCS$`Adapter Temperature  F`<=input$PCSAT_max,]
+      }
+      if(input$PCSDT1_min!=PCSDT1min || input$PCSDT1_max!=PCSDT1max){
+        data_PCS<-data_PCS[data_PCS$`Die 1 Temperature  F`>=input$PCSDT1_min & data_PCS$`Die 1 Temperature  F`<=input$PCSDT1_max,]
+      }
+      if(input$PCSDT2_min!=PCSDT2min || input$PCSDT2_max!=PCSDT2max){
+        data_PCS<-data_PCS[data_PCS$`Die 2 Temperature  F`>=input$PCSDT2_min & data_PCS$`Die 2 Temperature  F`<=input$PCSDT2_max,]
+      }
+      if(input$PCSIDI_min!=PCSIDImin || input$PCSIDI_max!=PCSIDImax){
+        data_PCS<-data_PCS[data_PCS$`Inner Diameter (in)`>=input$PCSIDI_min & data_PCS$`Inner Diameter (in)`<=input$PCSIDI_max,]
+      }
+      if(input$PCSODI_min!=PCSODImin || input$PCSODI_max!=PCSODImax){
+        data_PCS<-data_PCS[data_PCS$`Outer Diameter (in)`>=input$PCSODI_min & data_PCS$`Outer Diameter (in)`<=input$PCSODI_max,]
+      }
+      if(input$PCSWT_min!=PCSWTmin || input$PCSWT_max!=PCSWTmax){
+        data_PCS<-data_PCS[data_PCS$`Wall Thickness (in)`>=input$PCSWT_min & data_PCS$`Wall Thickness (in)`<=input$PCSWT_max,]
+      }
+      if(input$PCSOR_min!=PCSORmin || input$PCSOR_max!=PCSORmax){
+        data_PCS<-data_PCS[data_PCS$`Out of Roundness (in)`>=input$PCSOR_min & data_PCS$`Out of Roundness (in)`<=input$PCSOR_max,]
+      }
+      if(input$PCSCCT_min!=PCSCCTmin || input$PCSCCT_max!=PCSCCTmax){
+        data_PCS<-data_PCS[data_PCS$`Concentricity (in)`>=input$PCSCCT_min & data_PCS$`Concentricity (in)`<=input$PCSCCT_max,]
+      }
+      if(input$PCSLength_min!=PCSLengthmin || input$PCSLength_max!=PCSLengthmax){
+        data_PCS<-data_PCS[data_PCS$`Length (in)`>=input$PCSLength_min & data_PCS$`Length (in)`<=input$PCSLength_max,]
+      }
+      
+    
+    
        
       if(input$PCSNEXIV!="All"){
         if(input$PCSNEXIV=="yes"){
@@ -384,93 +429,213 @@ server<-function(input, output, session) {
   
   
   #create Server side of input box for Part Catalog Multi-Layered Extrusion PPS Data----table 2
+  #Part Resin
   output$PCMPN_input<-renderUI({
-    selectizeInput("PCMPN","Part Number",
+    selectizeInput("PCMPN",label = NULL,multiple=TRUE,
                    c("All",unique(as.character(multi_pps_data$`Part Number`))),
                    selected="All")
   })
   output$PCMPD_input<-renderUI({
-    selectizeInput("PCMPD","Part Description",
-                   c("All",unique(as.character(multi_pps_data$`Part Description`))),
-                   selected="All")
+    selectInput("PCMPD",label = NULL,
+                c("All",unique(as.character(multi_pps_data$`Part Description`))))
   })
   output$PCMRN_input<-renderUI({
-    selectizeInput("PCMRN","Resin Number",
-                   c("All",unique(as.character(multi_pps_data$`Resin Number`))),
-                   selected="All")
+    selectInput("PCMRN",label = NULL,
+                c("All",unique(as.character(multi_pps_data$`Resin Number`))))
   })
   output$PCMRD_input<-renderUI({
-    selectizeInput("PCMRD","Resin Description",
-                   c("All",unique(as.character(multi_pps_data$`Resin Description`))),
-                   selected="All")
+    selectInput("PCMRD",label = NULL,
+                c("All",unique(as.character(multi_pps_data$`Resin Description`))))
   })
-  output$PCMDS_input<-renderUI({
-    selectizeInput("PCMDS","Die Size",
-                   c("All",unique(as.character(multi_pps_data$`Die Size (in)`))),
-                   selected="All")
-  })
-  output$PCMTS_input<-renderUI({
-    selectizeInput("PCMTS","Tip Size",
-                   c("All",unique(as.character(multi_pps_data$`Tip Size (in)`))),
-                   selected="All")
-  })
-  output$PCMFT_input<-renderUI({
-    FT_min=1
-    FT_max=2
-    sliderInput("PCMFT","Feedthroat Temperature F",min=FT_min,max=FT_max,value=c(FT_min,FT_max),sep="",round=-4)
-  })
-  output$PCMBZT1_input<-renderUI({
-    selectInput("PCMBZT1","Barrel Zone 1 Temperature F",
-                c("All",unique(as.character(multi_pps_data$`Barrel Zone 1 Temperature  F`))))
-  })
-  output$PCMBZT2_input<-renderUI({
-    selectInput("PCMBZT2","Barrel Zone 2 Temperature F",
-                c("All",unique(as.character(multi_pps_data$`Barrel Zone 2 Temperature  F`))))
-  })
-  output$PCMBZT3_input<-renderUI({
-    selectInput("PCMBZT3","Barrel Zone 3 Temperature F",
-                c("All",unique(as.character(multi_pps_data$`Barrel Zone 3 Temperature  F`))))
-  })
-  output$PCMID_input<-renderUI({
-    selectizeInput("PCMID","Inner Diameter (in)",
-                   c("All",unique(as.character(multi_pps_data$`Inner Diameter (in)`))),
-                   selected="All")
-  })
-  output$PCMOD_input<-renderUI({
-    selectizeInput("PCMOD","Outer Diameter (in)",
-                   c("All",unique(as.character(multi_pps_data$`Outer Diameter (in)`))),
-                   selected="All")
-  })
-  output$PCMIWT_input<-renderUI({
-    selectizeInput("PCMIWT","Inner Wall Thickness (in)",
-                   c("All",unique(as.character(multi_pps_data$`Inner Wall Thickness (in)`))),
-                   selected="All")
-  })
-  output$PCMMWT_input<-renderUI({
-    selectizeInput("PCMMWT","Middle Wall Thickness (in)",
-                   c("All",unique(as.character(multi_pps_data$`Middle Wall Thickness (in)`))),
-                   selected="All")
-  })
-  output$PCMOWT_input<-renderUI({
-    selectizeInput("PCMOWT","Outer Wall Thickness (in)",
-                   c("All",unique(as.character(multi_pps_data$`Outer Wall Thickness (in)`))),
-                   selected="All")
-  })
-  output$PCMTWT_input<-renderUI({
-    selectizeInput("PCMTWT","Total Wall Thickness (in)",
-                   c("All",unique(as.character(multi_pps_data$`Total Wall Thickness (in)`))),
-                   selected="All")
-  })
-  output$PCMTL_input<-renderUI({
-    selectizeInput("PCMTL","Total Length",
-                   c("All",unique(as.character(multi_pps_data$`Total Length`))),
-                   selected="All")
+  output$PCMPPSN_input<-renderUI({
+    selectInput("PCMPPSN",label = NULL,
+                c("All",unique(as.character(multi_pps_data$`PPS Number`))))
   })
   
-  #Create Server side of Part Catalog Multi-Layered Extrusion PPS Data's table-----mytable2  
+  #Tooling
+  output$PCMDS_min_input<-renderUI({
+    numericInput("PCMDS_min",label = NULL,value=PCMDSmin,step=0.001)
+  })
+  output$PCMDS_max_input<-renderUI({
+    numericInput("PCMDS_max",label = NULL,value=PCMDSmax,step=0.001)
+  })
+  output$PCMDLL_input<-renderUI({
+    DLL_min=-1
+    DLL_max=0.54
+    selectInput("PCMDLL",label = NULL,c("All",unique(as.character(multi_pps_data$`Die Land Length (in)`))))
+  })
+  output$PCMTS_min_input<-renderUI({
+    numericInput("PCMTS_min",label = NULL,value=PCMTSmin,step=0.001)
+  })
+  output$PCMTS_max_input<-renderUI({
+    numericInput("PCMTS_max",label = NULL,value=PCMTSmax,step=0.001)
+  })
+  output$PCMTLL_input<-renderUI({
+    TLL_min=-1
+    TLL_max=0.49
+    selectInput("PCMTLL",label = NULL,c("All",unique(as.character(multi_pps_data$`Tip Land Length (in)`))))
+  })
+  output$PCMSP_input<-renderUI({
+    selectInput("PCMSP",label = NULL,
+                c("All",unique(as.character(multi_pps_data$`Screw Print`))))
+  })
+  
+  #Attributes_1
+  output$PCMFT_min_input<-renderUI({
+    numericInput("PCMFT_min",label = NULL,value = PCMFTmin,step=1)
+  })
+  output$PCMFT_max_input<-renderUI({
+    numericInput("PCMFT_max",label = NULL,value=PCMFTmax,step=1)
+  })
+  output$PCMBZT1_min_input<-renderUI({
+    numericInput("PCMBZT1_min",label = NULL,value=PCMBZT1min,step=5)
+  })
+  output$PCMBZT1_max_input<-renderUI({
+    numericInput("PCMBZT1_max",label = NULL,value=PCMBZT1max,step=5)
+  })
+  output$PCMBZT2_min_input<-renderUI({
+    numericInput("PCMBZT2_min",label = NULL,value=PCMBZT2min,step=5)
+  })
+  output$PCMBZT2_max_input<-renderUI({
+    numericInput("PCMBZT2_max",label = NULL,value=PCMBZT2max,step=5)
+  })
+  output$PCMBZT3_min_input<-renderUI({
+    numericInput("PCMBZT3_min",label = NULL,value=PCMBZT3min,step=5)
+  })
+  output$PCMBZT3_max_input<-renderUI({
+    numericInput("PCMBZT3_max",label = NULL,value=PCMBZT3max,step=5)
+  })
+  
+  #Attrobites_2
+  output$PCMCT_min_input<-renderUI({
+    numericInput("PCMCT_min",label = NULL,value=PCMCTmin,step=5)
+  })
+  output$PCMCT_max_input<-renderUI({
+    numericInput("PCMCT_max",label = NULL,value=PCMCTmax,step=5)
+  })
+  output$PCMAT_min_input<-renderUI({
+    numericInput("PCMAT_min",label = NULL,value=PCMATmin,step=5)
+  })
+  output$PCMAT_max_input<-renderUI({
+    numericInput("PCMAT_max",label = NULL,value=PCMATmax,step=5)
+  })
+  output$PCMDT1_min_input<-renderUI({
+    numericInput("PCMDT1_min",label = NULL,value=PCMDT1min,step=5)
+  })
+  output$PCMDT1_max_input<-renderUI({
+    numericInput("PCMDT1_max",label = NULL,value=PCMDT1max,step=5)
+  })
+  output$PCMDT2_min_input<-renderUI({
+    numericInput("PCMDT2_min",label = NULL,value=PCMDT2min,step=5)
+  })
+  output$PCMDT2_max_input<-renderUI({
+    numericInput("PCMDT2_max",label = NULL,value=PCMDT2max,step=5)
+  })
+  #Temps
+  output$PCMIDI_min_input<-renderUI({
+    numericInput("PCMIDI_min",label = NULL,value=PCMIDImin,step=0.001)
+  })
+  output$PCMIDI_max_input<-renderUI({
+    numericInput("PCMIDI_max",label = NULL,value=PCMIDImax,step=0.001)
+  })
+  output$PCMODI_min_input<-renderUI({
+    numericInput("PCMODI_min",label = NULL,value=PCMODImin,step=0.001)
+  })
+  output$PCMODI_max_input<-renderUI({
+    numericInput("PCMODI_max",label = NULL,value=PCMODImax,step=0.001)
+  })
+  
+  output$PCMIWT_min_input<-renderUI({
+    numericInput("PCMIWT_min",label = NULL,value=PCMIWTmin,step=0.001)
+  })
+  output$PCMIWT_max_input<-renderUI({
+    numericInput("PCMIWT_max",label = NULL,value=PCMIWTmax,step=0.001)
+  })
+  output$PCMMWT_min_input<-renderUI({
+    numericInput("PCMMWT_min",label = NULL,value=PCMMWTmin,step=0.001)
+  })
+  output$PCMMWT_max_input<-renderUI({
+    numericInput("PCMMWT_max",label = NULL,value=PCMMWTmax,step=0.001)
+  })
+  output$PCMOWT_min_input<-renderUI({
+    numericInput("PCMOWT_min",label = NULL,value=PCMOWTmin,step=0.001)
+  })
+  output$PCMOWT_max_input<-renderUI({
+    numericInput("PCMOWT_max",label = NULL,value=PCMOWTmax,step=0.001)
+  })
+  output$PCMTWT_min_input<-renderUI({
+    numericInput("PCMTWT_min",label = NULL,value=PCMTWTmin,step=0.001)
+  })
+  output$PCMTWT_max_input<-renderUI({
+    numericInput("PCMTWT_max",label = NULL,value=PCMTWTmax,step=0.001)
+  })
+  
+  output$PCMOR_min_input<-renderUI({
+    numericInput("PCMOR_min",label = NULL,value=PCMORmin,step=0.001)
+  })
+  output$PCMOR_max_input<-renderUI({
+    numericInput("PCMOR_max",label = NULL,value=PCMORmax,step=0.001)
+  })
+  output$PCMCCT_min_input<-renderUI({
+    numericInput("PCMCCT_min",label = NULL,value=PCMCCTmin,step=0.0001)
+  })
+  output$PCMCCT_max_input<-renderUI({
+    numericInput("PCMCCT_max",label = NULL,value=PCMCCTmax,step=0.0001)
+  })
+  output$PCMLength_min_input<-renderUI({
+    numericInput("PCMLength_min",label = NULL,value=PCMLengthmin,step=1)
+  })
+  output$PCMLength_max_input<-renderUI({
+    numericInput("PCMLength_max",label = NULL,value=PCMLengthmax,step=1)
+  })
+  output$PCMPPD_input<-renderUI({
+    selectInput("PCMPPD",label = NULL,
+                c("All",unique(as.character(multi_pps_data$`Perpendicularity (in)`))))
+  })
+  
+  #Special_1
+  output$PCMNEXIV_input<-renderUI({
+    selectInput("PCMNEXIV",label = NULL,choices=c("All","yes","NA"))
+  })
+  output$PCMAnnealed_input<-renderUI({
+    selectInput("PCMAnnealed",label = NULL,choices=c("All","yes","NA"))
+  })
+  output$PCMCaliper_input<-renderUI({
+    selectInput("PCMCaliper",label = NULL,choices=c("All","yes","NA"))
+  })
+  output$PCMOS_input<-renderUI({
+    selectInput("PCMOS",label = NULL,choices=c("All","yes","NA"))
+  })
+  output$PCMMP_input<-renderUI({
+    selectInput("PCMMP",label = NULL,choices=c("All","yes","NA"))
+  })
+  output$PCMHT_input<-renderUI({
+    selectInput("PCMHT",label = NULL,choices=c("All","yes","NA"))
+  })
+  #Special_2
+  output$PCMSPD_input<-renderUI({
+    selectInput("PCMSPD",label = NULL,choices=c("All","yes","NA"))
+  })
+  output$PCMSLD_input<-renderUI({
+    selectInput("PCMSLD",label = NULL,choices=c("All","yes","NA"))
+  })
+  output$PCMDLN_input<-renderUI({
+    selectInput("PCMDLN",label = NULL,choices=c("All","yes","NA"))
+  })
+  output$PCMULT_input<-renderUI({
+    selectInput("PCMULT",label = NULL,choices=c("All","yes","NA"))
+  })
+  output$PCMVC_input<-renderUI({
+    selectInput("PCMVC",label = NULL,choices=c("All","yes","NA"))
+  })
+  output$PCMIRD_input<-renderUI({
+    selectInput("PCMIRD",label = NULL,choices=c("All","yes","NA"))
+  })
+  
+  #Create Server side of Part Catalog Single Extrusion PPS Data's table-----mytable1 
   output$mytable2 <- DT::renderDataTable({
     DT::datatable({
-      data_PCM<-multi_pps_data[, input$show_vars2]            
+      data_PCM<-multi_pps_data[, input$show_vars2]
       if(input$PCMPN!="All"){
         data_PCM<-data_PCM[data_PCM$`Part Number`==input$PCMPN,]
       }
@@ -481,41 +646,162 @@ server<-function(input, output, session) {
         data_PCM<-data_PCM[data_PCM$`Resin Number`==input$PCMRN,]
       }
       if(input$PCMRD!="All"){
-        data_PCM<-data_PCM[data_PCM$`Resin Description`==input$PCMRD,]
+        data_PCM<-data_PCM[data_PCM$`Resin Descriptionr`==input$PCMRD,]
       }
-      if(input$PCMDS!="All"){
-        data_PCM<-data_PCM[data_PCM$`Die Size (in)`==input$PCMDS,]
+      if(input$PCMPPSN!="All"){
+        data_PCM<-data_PCM[data_PCM$`PPS Number`==input$PCMPPSN,]
       }
-      if(input$PCMTS!="All"){
-        data_PCM<-data_PCM[data_PCM$`Tip Size (in)`==input$PCMTS,]
+      if(input$PCMDS_min!=PCMDSmin || input$PCMDS_max!=PCMDSmax){
+        data_PCM<-data_PCM[data_PCM$`Die Size (in)`>=input$PCMDS_min & data_PCM$`Die Size (in)`<=input$PCMDS_max,]
       }
-      if(input$PCMBZT1!="All"){
-        PCMBZT1_v<-input$PCMBZT1
-        PCMPN_v<-unique(data_PCM$`Part Number`[data_PCM$`Barrel Zone 1 Temperature  F`==PCMBZT1_v])
-        data_PCM<-data_PCM[data_PCM$`Part Number`==PCMPN_v,]
+      if(input$PCMDLL!="All"){
+        data_PCM<-data_PCM[data_PCM$`Die Land Length (in)`==input$PCMDLL,]
       }
- 
-      if(input$PCMID!="All"){
-        data_PCM<-data_PCM[data_PCM$`Inner Diameter (in)`==input$PCMID,]
+      if(input$PCMTS_min!=PCMTSmin || input$PCMTS_max!=PCMTSmax){
+        data_PCM<-data_PCM[data_PCM$`Die Size (in)`>=input$PCMTS_min & data_PCM$`Die Size (in)`<=input$PCMTS_max,]
       }
-      if(input$PCMOD!="All"){
-        data_PCM<-data_PCM[data_PCM$`Outer Diameter (in)`==input$PCMOD,]
+      if(input$PCMTLL!="All"){
+        data_PCM<-data_PCM[data_PCM$`Tip Land Length (in)`==input$PCMTLL,]
+      }      
+      if(input$PCMSP!="All"){
+        data_PCM<-data_PCM[data_PCM$`Screw Print`==input$PCMSP,]
       }
-      if(input$PCMIWT!="All"){
-        data_PCM<-data_PCM[data_PCM$`Inner Wall Thickness (in)`==input$PCMIWT,]
+      if(input$PCMFT_min!=PCMFTmin || input$PCMFT_max!=PCMFTmax){
+        data_PCM<-data_PCM[data_PCM$`Feedthroat Temperature  F`>=input$PCMFT_min & data_PCM$`Feedthroat Temperature  F`<=input$PCMFT_max,]
       }
-      if(input$PCMMWT!="All"){
-        data_PCM<-data_PCM[data_PCM$`Middle Wall Thickness (in)`==input$PCMMWT,]
+      if(input$PCMBZT1_min!=PCMBZT1min || input$PCMBZT1_max!=PCMBZT1max){
+        data_PCM<-data_PCM[data_PCM$`Barrel Zone 1 Temperature  F`>=input$PCMBZT1_min & data_PCM$`Barrel Zone 1 Temperature  F`<=input$PCMBZT1_max,]
       }
-      if(input$PCMOWT!="All"){
-        data_PCM<-data_PCM[data_PCM$`Outer Wall Thickness (in)`==input$PCMOWT,]
+      if(input$PCMBZT2_min!=PCMBZT2min || input$PCMBZT2_max!=PCMBZT2max){
+        data_PCM<-data_PCM[data_PCM$`Barrel Zone 2 Temperature  F`>=input$PCMBZT2_min & data_PCM$`Barrel Zone 2 Temperature  F`<=input$PCMBZT2_max,]
       }
-      if(input$PCMTWT!="All"){
-        data_PCM<-data_PCM[data_PCM$`Total Wall Thickness (in)`==input$PCMTWT,]
+      if(input$PCMBZT3_min!=PCMBZT3min || input$PCMBZT3_max!=PCMBZT3max){
+        data_PCM<-data_PCM[data_PCM$`Barrel Zone 3 Temperature  F`>=input$PCMBZT3_min & data_PCM$`Barrel Zone 3 Temperature  F`<=input$PCMBZT3_max,]
       }
-      if(input$PCMTL!="All"){
-        data_PCM<-data_PCM[data_PCM$`Total Length`==input$PCMTL,]
+      if(input$PCMCT_min!=PCMCTmin || input$PCMCT_max!=PCMCTmax){
+        data_PCM<-data_PCM[data_PCM$`Clamp Temperature  F`>=input$PCMCT_min & data_PCM$`Clamp Temperature  F`<=input$PCMCT_max,]
       }
+      if(input$PCMAT_min!=PCMATmin || input$PCMAT_max!=PCMATmax){
+        data_PCM<-data_PCM[data_PCM$`Adapter Temperature  F`>=input$PCMAT_min & data_PCM$`Adapter Temperature  F`<=input$PCMAT_max,]
+      }
+      if(input$PCMDT1_min!=PCMDT1min || input$PCMDT1_max!=PCMDT1max){
+        data_PCM<-data_PCM[data_PCM$`Die 1 Temperature  F`>=input$PCMDT1_min & data_PCM$`Die 1 Temperature  F`<=input$PCMDT1_max,]
+      }
+      if(input$PCMDT2_min!=PCMDT2min || input$PCMDT2_max!=PCMDT2max){
+        data_PCM<-data_PCM[data_PCM$`Die 2 Temperature  F`>=input$PCMDT2_min & data_PCM$`Die 2 Temperature  F`<=input$PCMDT2_max,]
+      }
+      if(input$PCMIDI_min!=PCMIDImin || input$PCMIDI_max!=PCMIDImax){
+        data_PCM<-data_PCM[data_PCM$`Inner Diameter (in)`>=input$PCMIDI_min & data_PCM$`Inner Diameter (in)`<=input$PCMIDI_max,]
+      }
+      if(input$PCMODI_min!=PCMODImin || input$PCMODI_max!=PCMODImax){
+        data_PCM<-data_PCM[data_PCM$`Outer Diameter (in)`>=input$PCMODI_min & data_PCM$`Outer Diameter (in)`<=input$PCMODI_max,]
+      }
+      if(input$PCMIWT_min!=PCMIWTmin || input$PCMIWT_max!=PCMIWTmax){
+        data_PCM<-data_PCM[data_PCM$`Inner Wall Thickness (in)`>=input$PCMIWT_min & data_PCM$`Inner Wall Thickness (in)`<=input$PCMIWT_max,]
+      }
+      if(input$PCMMWT_min!=PCMMWTmin || input$PCMMWT_max!=PCMMWTmax){
+        data_PCM<-data_PCM[data_PCM$`Middle Wall Thickness (in)`>=input$PCMMWT_min & data_PCM$`Middle Wall Thickness (in)`<=input$PCMMWT_max,]
+      }
+      if(input$PCMOWT_min!=PCMOWTmin || input$PCMOWT_max!=PCMOWTmax){
+        data_PCM<-data_PCM[data_PCM$`Outer Wall Thickness (in)`>=input$PCMOWT_min & data_PCM$`Outer Wall Thickness (in)`<=input$PCMOWT_max,]
+      }
+      if(input$PCMTWT_min!=PCMTWTmin || input$PCMTWT_max!=PCMTWTmax){
+        data_PCM<-data_PCM[data_PCM$`Total Wall Thickness (in)`>=input$PCMTWT_min & data_PCM$`Total Wall Thickness (in)`<=input$PCMTWT_max,]
+      }
+      if(input$PCMOR_min!=PCMORmin || input$PCMOR_max!=PCMORmax){
+        data_PCM<-data_PCM[data_PCM$`Out of Roundness (in)`>=input$PCMOR_min & data_PCM$`Out of Roundness (in)`<=input$PCMOR_max,]
+      }
+      if(input$PCMCCT_min!=PCMCCTmin || input$PCMCCT_max!=PCMCCTmax){
+        data_PCM<-data_PCM[data_PCM$`Concentricity (in)`>=input$PCMCCT_min & data_PCM$`Concentricity (in)`<=input$PCMCCT_max,]
+      }
+      if(input$PCMLength_min!=PCMLengthmin || input$PCMLength_max!=PCMLengthmax){
+        data_PCM<-data_PCM[data_PCM$`Length (in)`>=input$PCMLength_min & data_PCM$`Length (in)`<=input$PCMLength_max,]
+      }
+      if(input$PCMNEXIV!="All"){
+        if(input$PCMNEXIV=="yes"){
+          data_PCM<-data_PCM[data_PCM$`NEXIV`=="yes",]
+        } else{
+          data_PCM<-data_PCM[data_PCM$`NEXIV`=="",]
+        }
+      }
+      if(input$PCMAnnealed!="All"){
+        if(input$PCMAnnealed=="yes"){
+          data_PCM<-data_PCM[data_PCM$`Annealed`=="yes",]
+        } else{
+          data_PCM<-data_PCM[data_PCM$`Annealed`=="",]
+        }
+      }
+      if(input$PCMCaliper!="All"){
+        if(input$PCMCaliper=="yes"){
+          data_PCM<-data_PCM[data_PCM$`Caliper`=="yes",]
+        } else{
+          data_PCM<-data_PCM[data_PCM$`Caliper`=="",]
+        }
+      }
+      if(input$PCMOS!="All"){
+        if(input$PCMOS=="yes"){
+          data_PCM<-data_PCM[data_PCM$`OD Sort`=="yes",]
+        } else{
+          data_PCM<-data_PCM[data_PCM$`OD Sort`=="",]
+        }
+      }
+      if(input$PCMMP!="All"){
+        if(input$PCMMP=="yes"){
+          data_PCM<-data_PCM[data_PCM$`Melt Pump`=="yes",]
+        } else{
+          data_PCM<-data_PCM[data_PCM$`Melt Pump`=="",]
+        }
+      }
+      if(input$PCMHT!="All"){
+        if(input$PCMHT=="yes"){
+          data_PCM<-data_PCM[data_PCM$`Hypo Tip`=="yes",]
+        } else{
+          data_PCM<-data_PCM[data_PCM$`Hypo Tip`=="",]
+        }
+      }
+      if(input$PCMSPD!="All"){
+        if(input$PCMSPD=="yes"){
+          data_PCM<-data_PCM[data_PCM$`Sparker Die`=="yes",]
+        } else{
+          data_PCM<-data_PCM[data_PCM$`Sparker Die`=="",]
+        }
+      }
+      if(input$PCMSLD!="All"){
+        if(input$PCMSLD=="yes"){
+          data_PCM<-data_PCM[data_PCM$`Slicking Die`=="yes",]
+        } else{
+          data_PCM<-data_PCM[data_PCM$`Slicking Die`=="",]
+        }
+      }
+      if(input$PCMDLN!="All"){
+        if(input$PCMDLN=="yes"){
+          data_PCM<-data_PCM[data_PCM$`Delamination`=="yes",]
+        } else{
+          data_PCM<-data_PCM[data_PCM$`Delamination`=="",]
+        }
+      }
+      if(input$PCMULT!="All"){
+        if(input$PCMULT=="yes"){
+          data_PCM<-data_PCM[data_PCM$`Ultrasonic`=="yes",]
+        } else{
+          data_PCM<-data_PCM[data_PCM$`Ultrasonic`=="",]
+        }
+      }
+      if(input$PCMVC!="All"){
+        if(input$PCMVC=="yes"){
+          data_PCM<-data_PCM[data_PCM$`Vacuum Calibration`=="yes",]
+        } else{
+          data_PCM<-data_PCM[data_PCM$`Vacuum Calibration`=="",]
+        }
+      }
+      if(input$PCMIRD!="All"){
+        if(input$PCMIRD=="yes"){
+          data_PCM<-data_PCM[data_PCM$`Irradiated`=="yes",]
+        } else{
+          data_PCM<-data_PCM[data_PCM$`Irradiated`=="",]
+        }
+      }
+      
       data_PCM
     },
     options = list(orderClasses = TRUE, 
@@ -527,6 +813,7 @@ server<-function(input, output, session) {
                    scrollY=500,
                    autoWidth=TRUE))
   })
+  
   
   #
   
