@@ -47,19 +47,76 @@ screw_data <- read.csv(screw_pathfile, header = TRUE, stringsAsFactors = FALSE,
 
 #DATA CLEANING
 
-#Change all NA to blank
+#Convert all char to numeric
+for (i in 6:9){
+single_pps_data[,i]<-as.numeric(single_pps_data[,i],na.rm=T)
+}
+for (i in 11:25){
+  single_pps_data[,i]<-as.numeric(single_pps_data[,i],na.rm=T)
+}
+
+for (i in 8:11){
+  for (j in 1:nrow(multi_pps_data)){
+  if(multi_pps_data[j,i]=="Tooling Not Found"){
+    multi_pps_data[j,i]="NA"
+  }}
+  multi_pps_data[,i]<as.numeric(multi_pps_data[,i],na.rm=T)
+}
+for (i in 13:32){
+  multi_pps_data[,i]<as.numeric(multi_pps_data[,i],na.rm=T)
+}
+
+for (i in 6:9){
+  tapered_pps_data[,i]<-as.numeric(tapered_pps_data[,i],na.rm=T)
+}
+for (i in 11:33){
+  tapered_pps_data[,i]<-as.numeric(tapered_pps_data[,i],na.rm=T)
+}
+
+
+
+#obtain min and max for all length and temperature from single,multi,tapered pps data
+single_pps_data[,25]<-as.numeric(single_pps_data[,25],na.rm=T)
+single_pps_range=matrix(0,2,19)
+multi_pps_range=matrix(0,2,24)
+tapered_pps_range=matrix(0,2,27)
+#single_pps_data
+for (i in 1:4){
+  single_pps_range[1,i]<-min(single_pps_data[,i+5],na.rm=T)
+  single_pps_range[2,i]<-max(single_pps_data[,i+5],na.rm=T)
+}
+for (i in 5:19){
+  single_pps_range[1,i]<-min(single_pps_data[,i+6],na.rm=T)
+  single_pps_range[2,i]<-max(single_pps_data[,i+6],na.rm=T)
+}
+#multi_pps_data
+for (i in 1:4){
+  multi_pps_range[1,i]<-min(multi_pps_data[,i+5],na.rm=T)
+  multi_pps_range[2,i]<-max(multi_pps_data[,i+5],na.rm=T)
+}
+for (i in 5:24){
+  multi_pps_range[1,i]<-min(multi_pps_data[,i+6],na.rm=T)
+  multi_pps_range[2,i]<-max(multi_pps_data[,i+6],na.rm=T)
+}
+#tapered
+for (i in 1:4){
+  tapered_pps_range[1,i]<-min(tapered_pps_data[,i+5],na.rm=T)
+  tapered_pps_range[2,i]<-max(tapered_pps_data[,i+5],na.rm=T)
+}
+for (i in 5:27){
+  tapered_pps_range[1,i]<-min(tapered_pps_data[,i+6],na.rm=T)
+  tapered_pps_range[2,i]<-max(tapered_pps_data[,i+6],na.rm=T)
+}
+
+
+
+#convert NA to blank for all length and temperature values
 single_pps_data[is.na(single_pps_data)]<-""
 single_tari_data[is.na(single_tari_data)]<-""
 multi_pps_data[is.na(multi_pps_data)]<-""
 tapered_pps_data[is.na(tapered_pps_data)]<-""
 resin_data[is.na(resin_data)]<-""
 screw_data[is.na(screw_data)]<-""
-
-#single_pps_data---change a non-numeric value to blank
-#single_pps_data[,single_pps_data$`Die Land Length (in)`==word]<=""
-#single_pps_data[single_pps_data$`Die Size (in)`=="Profile",]<-""
-#single_pps_data[single_pps_data$`Die Land Length (in)`=="Tooling was not found",]<-""
-#single_pps_data[single_pps_data$`Die Land Length (in)`=="Standard",]<-""
 
 
 
@@ -78,6 +135,11 @@ Time_Start<-as.Date(Time_Start,origin="1970-01-01")
 Time_End<-sqldf("select Max([Start Date]) from single_tari_data")
 Time_End<-as.numeric(Time_End)
 Time_End<-as.Date(Time_End,origin="1970-01-01")
+
+
+
+
+
 
 
 #Get the range of all tabs---single Extrusion PPS DATA
