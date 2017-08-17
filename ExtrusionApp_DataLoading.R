@@ -49,22 +49,23 @@ screw_data <- read.csv(screw_pathfile, header = TRUE, stringsAsFactors = FALSE,
 
 #Convert all char to numeric
 for (i in 6:9){
-single_pps_data[,i]<-as.numeric(single_pps_data[,i],na.rm=T)
+  single_pps_data[,i]<-as.numeric(single_pps_data[,i],na.rm=T)
 }
 for (i in 11:25){
   single_pps_data[,i]<-as.numeric(single_pps_data[,i],na.rm=T)
 }
 
 for (i in 8:11){
-  for (j in 1:nrow(multi_pps_data)){
-  if(multi_pps_data[j,i]=="Tooling Not Found"){
-    multi_pps_data[j,i]="NA"
-  }}
-  multi_pps_data[,i]<as.numeric(multi_pps_data[,i],na.rm=T)
+  multi_pps_data[,i]<-as.numeric(multi_pps_data[,i])
 }
-for (i in 13:32){
-  multi_pps_data[,i]<as.numeric(multi_pps_data[,i],na.rm=T)
+for (i in 13:20){
+  multi_pps_data[,i]<-as.numeric(multi_pps_data[,i])
 }
+for (i in 22:32){
+  multi_pps_data[,i]<-as.numeric(multi_pps_data[,i])
+}
+
+
 
 for (i in 6:9){
   tapered_pps_data[,i]<-as.numeric(tapered_pps_data[,i],na.rm=T)
@@ -78,8 +79,20 @@ for (i in 11:33){
 #obtain min and max for all length and temperature from single,multi,tapered pps data
 single_pps_data[,25]<-as.numeric(single_pps_data[,25],na.rm=T)
 single_pps_range=matrix(0,2,19)
-multi_pps_range=matrix(0,2,24)
+colnames(single_pps_range)<-c("DS","DLL","TS","TLL","FT","BZT1","BZT2","BZT3","CT","AT","DT1","DT2","IDI","ODI","WT","OR","CCT","Length","PPD")
+rownames(single_pps_range)<-c("min","max")
+
+
+multi_pps_range=matrix(0,2,23)
+colnames(multi_pps_range)<-c("DS","DLL","TS","TLL","FT","BZT1","BZT2","BZT3","CT","AT","DT1","DT2","IDI","ODI",
+                             "IWT","MWT","OWT","TWT","OR","CCT","Length","ToLength","PPD")
+rownames(multi_pps_range)<-c("min","max")
+
 tapered_pps_range=matrix(0,2,27)
+rownames(tapered_pps_range)<-c("min","max")
+colnames(single_pps_range)<-c("DS","DLL","TS","TLL","FT","BZT1","BZT2","BZT3","CT","AT","DT1","DT2",
+                              "PIDI","PODI","PWT","POR","PCCT","DIDI","DODI","DWT","DOR","DCCT",
+                              "PLength","TLength","DLength","ToLength","PPD")
 #single_pps_data
 for (i in 1:4){
   single_pps_range[1,i]<-min(single_pps_data[,i+5],na.rm=T)
@@ -91,12 +104,16 @@ for (i in 5:19){
 }
 #multi_pps_data
 for (i in 1:4){
-  multi_pps_range[1,i]<-min(multi_pps_data[,i+5],na.rm=T)
-  multi_pps_range[2,i]<-max(multi_pps_data[,i+5],na.rm=T)
+  multi_pps_range[1,i]<-min(multi_pps_data[,i+7],na.rm=T)
+  multi_pps_range[2,i]<-max(multi_pps_data[,i+7],na.rm=T)
 }
-for (i in 5:24){
-  multi_pps_range[1,i]<-min(multi_pps_data[,i+6],na.rm=T)
-  multi_pps_range[2,i]<-max(multi_pps_data[,i+6],na.rm=T)
+for (i in 5:12){
+  multi_pps_range[1,i]<-min(multi_pps_data[,i+8],na.rm=T)
+  multi_pps_range[2,i]<-max(multi_pps_data[,i+8],na.rm=T)
+}
+for (i in 13:23){
+  multi_pps_range[1,i]<-min(multi_pps_data[,i+9],na.rm=T)
+  multi_pps_range[2,i]<-max(multi_pps_data[,i+9],na.rm=T)
 }
 #tapered
 for (i in 1:4){
@@ -129,6 +146,9 @@ temp[,1:2]=str_split_fixed(single_tari_data$`Start Time`,' ',2)
 temp[,1]=as.Date(temp[,1],"%m/%d/%Y",origin="1970-01-01")
 single_tari_data=cbind(single_tari_data[,1:which(colnames(single_tari_data)=="Start Time")-1],
                        temp,single_tari_data[,(which(colnames(single_tari_data)=="Start Time")+1):ncol(single_tari_data)])
+
+
+
 Time_Start=sqldf("select Min([Start Date]) from single_tari_data")
 Time_Start<-as.numeric(Time_Start)
 Time_Start<-as.Date(Time_Start,origin="1970-01-01")
@@ -143,35 +163,68 @@ Time_End<-as.Date(Time_End,origin="1970-01-01")
 
 
 #Get the range of all tabs---single Extrusion PPS DATA
-PCSDSmin=0.035;PCSDSmax=0.54;PCSTSmin=0.01;PCSTSmax=0.49;PCSFTmin=20;PCSFTmax=100;PCSBZT1min=245;PCSBZT1max=650
-PCSBZT2min=315;PCSBZT2max=700;PCSBZT3min=320;PCSBZT3max=735;PCSCTmin=325;PCSCTmax=735;PCSATmin=330;PCSATmax=740
-PCSDT1min=330;PCSDT1max=740;PCSDT2min=330;PCSDT2max=740;PCSIDImin=0.0009;PCSIDImax=0.275;PCSODImin=0.0194;PCSODImax=0.41
-PCSWTmin=0.001;PCSWTmax=0.0375;PCSORmin=0.001;PCSORmax=0.007;PCSCCTmin=0.0005;PCSCCTmax=0.0025;PCSLengthmin=0.4;PCSLengthmax=84
+PCSDSmin=single_pps_range[1,1];PCSDSmax=single_pps_range[2,1];
+PCSTSmin=single_pps_range[1,3];PCSTSmax=single_pps_range[2,3];
+PCSFTmin=single_pps_range[1,5];PCSFTmax=single_pps_range[2,5];
+PCSBZT1min=single_pps_range[1,6];PCSBZT1max=single_pps_range[2,6];
+PCSBZT2min=single_pps_range[1,7];PCSBZT2max=single_pps_range[2,7];
+PCSBZT3min=single_pps_range[1,8];PCSBZT3max=single_pps_range[2,8];
+PCSCTmin=single_pps_range[1,9];PCSCTmax=single_pps_range[2,9];
+PCSATmin=single_pps_range[1,10];PCSATmax=single_pps_range[2,10];
+PCSDT1min=single_pps_range[1,11];PCSDT1max=single_pps_range[2,11];
+PCSDT2min=single_pps_range[1,12];PCSDT2max=single_pps_range[2,12];
+PCSIDImin=single_pps_range[1,13];PCSIDImax=single_pps_range[2,13];
+PCSODImin=single_pps_range[1,14];PCSODImax=single_pps_range[2,14];
+PCSWTmin=single_pps_range[1,15];PCSWTmax=single_pps_range[2,15];
+PCSORmin=single_pps_range[1,16];PCSORmax=single_pps_range[2,16];
+PCSCCTmin=single_pps_range[1,17];PCSCCTmax=single_pps_range[2,17];
+PCSLengthmin=single_pps_range[1,18];PCSLengthmax=single_pps_range[2,18];
 #Get the range of all tabs---Multi Extrusion PPS DATA
-PCMDSmin=0.035;PCMDSmax=0.54;PCMTSmin=0.01;PCMTSmax=0.49;PCMFTmin=20;PCMFTmax=100;PCMBZT1min=245;PCMBZT1max=650
-PCMBZT2min=315;PCMBZT2max=700;PCMBZT3min=320;PCMBZT3max=735;PCMCTmin=325;PCMCTmax=735;PCMATmin=330;PCMATmax=740
-PCMDT1min=330;PCMDT1max=740;PCMDT2min=330;PCMDT2max=740;PCMIDImin=0.0009;PCMIDImax=0.275;PCMODImin=0.0194;PCMODImax=0.41
-PCMIWTmin=0.0004;PCMIWTmax=0.0262;PCMMWTmin=0.003;PCMMWTmax=0.001;PCMOWTmin=0.0005;PCMOWTmax=0.017;PCMTWTmin=0.0015;PCMTWTmax=0.096;
-PCMORmin=0.001;PCMORmax=0.007;PCMCCTmin=0.0005;PCMCCTmax=0.0025;PCMLengthmin=0.4;PCMLengthmax=84
+PCMDSmin=multi_pps_range[1,1];PCMDSmax=multi_pps_range[2,1];
+PCMTSmin=multi_pps_range[1,3];PCMTSmax=multi_pps_range[2,3];
+PCMFTmin=multi_pps_range[1,5];PCMFTmax=multi_pps_range[2,5];
+PCMBZT1min=multi_pps_range[1,6];PCMBZT1max=multi_pps_range[2,6];
+PCMBZT2min=multi_pps_range[1,7];PCMBZT2max=multi_pps_range[2,7];
+PCMBZT3min=multi_pps_range[1,8];PCMBZT3max=multi_pps_range[2,8];
+PCMCTmin=multi_pps_range[1,9];PCMCTmax=multi_pps_range[2,9];
+PCMATmin=multi_pps_range[1,10];PCMATmax=multi_pps_range[2,10];
+PCMDT1min=multi_pps_range[1,11];PCMDT1max=multi_pps_range[2,11];
+PCMDT2min=multi_pps_range[1,12];PCMDT2max=multi_pps_range[2,12];
+PCMIDImin=multi_pps_range[1,13];PCMIDImax=multi_pps_range[2,13];
+PCMODImin=multi_pps_range[1,14];PCMODImax=multi_pps_range[2,14];
+PCMIWTmin=multi_pps_range[1,15];PCMIWTmax=multi_pps_range[2,15];
+PCMMWTmin=multi_pps_range[1,16];PCMMWTmax=multi_pps_range[2,16];
+PCMOWTmin=multi_pps_range[1,17];PCMOWTmax=multi_pps_range[2,17];
+PCMTWTmin=multi_pps_range[1,18];PCMTWTmax=multi_pps_range[2,18];
+PCMORmin=multi_pps_range[1,19];PCMORmax=multi_pps_range[2,19];
+PCMCCTmin=multi_pps_range[1,20];PCMCCTmax=multi_pps_range[2,20];
+PCMLengthmin=multi_pps_range[1,21];PCMLengthmax=multi_pps_range[2,21];
+PCMToLengthmin=multi_pps_range[1,22];PCMToLengthmax=multi_pps_range[2,22];
 #Get the range of all tabs---Tapered Extrusion PPS DATA
-PCTDSmin=0.035;PCTDSmax=0.54;PCTTSmin=0.01;PCTTSmax=0.49;PCTFTmin=20;PCTFTmax=100;PCTBZT1min=245;PCTBZT1max=650
-PCTBZT2min=315;PCTBZT2max=700;PCTBZT3min=320;PCTBZT3max=735;PCTCTmin=325;PCTCTmax=735;PCTATmin=330;PCTATmax=740
-PCTDT1min=330;PCTDT1max=740;PCTDT2min=330;PCTDT2max=740;
-PCTPIDImin=0.0009;PCTPIDImax=0.275;PCTPODImin=0.0194;PCTPODImax=0.41;PCTPWTmin=0.0004;PCTPWTmax=0.0262;
-PCTPORmin=0.001;PCTPORmax=0.007;PCTPCCTmin=0.0005;PCTPCCTmax=0.0025;
-PCTDIDImin=0.0009;PCTDIDImax=0.275;PCTDODImin=0.0194;PCTDODImax=0.41;PCTDWTmin=0.0004;PCTDWTmax=0.0262;
-PCTDORmin=0.001;PCTDORmax=0.007;PCTDCCTmin=0.0005;PCTDCCTmax=0.0025;
-PCTPLengthmin=0.4;PCTPLengthmax=84;PCTTRLengthmin=0.4;PCTTRLengthmax=84;PCTDLengthmin=0.4;PCTDLengthmax=84;
-PCTTOLengthmin=0.4;PCTTOLengthmax=84
-
-
-
-
-
-
-#Get the range of all tabs---Tapered Extrusion PPS DATA
-PCTDSmin=min(tapered_pps_data$`Die Size (in)`)
-PCTDSmax=max(tapered_pps_data$`Die Size (in)`)
+PCTDSmin=tapered_pps_range[[1,1]];PCTDSmax=tapered_pps_range[[2,1]]
+PCTTSmin=tapered_pps_range[[1,3]];PCTTSmax=tapered_pps_range[[2,3]]
+PCTFTmin=tapered_pps_range[[1,5]];PCTFTmax=tapered_pps_range[[2,5]]
+PCTBZT1min=tapered_pps_range[[1,6]];PCTBZT1max=tapered_pps_range[[2,6]]
+PCTBZT2min=tapered_pps_range[[1,7]];PCTBZT2max=tapered_pps_range[[2,7]]
+PCTBZT3min=tapered_pps_range[[1,8]];PCTBZT3max=tapered_pps_range[[2,8]]
+PCTCTmin=tapered_pps_range[[1,9]];PCTCTmax=tapered_pps_range[[2,9]]
+PCTATmin=tapered_pps_range[[1,10]];PCTATmax=tapered_pps_range[[2,10]]
+PCTDT1min=tapered_pps_range[[1,11]];PCTDT1max=tapered_pps_range[[2,11]]
+PCTDT2min=tapered_pps_range[[1,12]];PCTDT2max=tapered_pps_range[[2,12]]
+PCTPIDImin=tapered_pps_range[[1,13]];PCTPIDImax=tapered_pps_range[[2,13]]
+PCTPODImin=tapered_pps_range[[1,14]];PCTPODImax=tapered_pps_range[[2,14]]
+PCTPWTmin=tapered_pps_range[[1,15]];PCTPWTmax=tapered_pps_range[[2,15]]
+PCTPORmin=tapered_pps_range[[1,16]];PCTPORmax=tapered_pps_range[[2,16]]
+PCTPCCTmin=tapered_pps_range[[1,17]];PCTPCCTmax=tapered_pps_range[[2,17]]
+PCTDIDImin=tapered_pps_range[[1,18]];PCTDIDImax=tapered_pps_range[[2,18]]
+PCTDODImin=tapered_pps_range[[1,19]];PCTDODImax=tapered_pps_range[[2,19]]
+PCTDWTmin=tapered_pps_range[[1,20]];PCTDWTmax=tapered_pps_range[[2,20]]
+PCTDORmin=tapered_pps_range[[1,21]];PCTDORmax=tapered_pps_range[[2,21]]
+PCTDCCTmin=tapered_pps_range[[1,22]];PCTDCCTmax=tapered_pps_range[[2,22]]
+PCTPLengthmin=tapered_pps_range[[1,23]];PCTPLengthmax=tapered_pps_range[[2,23]]
+PCTTLengthmin=tapered_pps_range[[1,24]];PCTTLengthmax=tapered_pps_range[[2,24]]
+PCTDLengthmin=tapered_pps_range[[1,25]];PCTDLengthmax=tapered_pps_range[[2,25]]
+PCTToLengthmin=tapered_pps_range[[1,26]];PCTToLengthmax=tapered_pps_range[[2,26]]
 
 
 

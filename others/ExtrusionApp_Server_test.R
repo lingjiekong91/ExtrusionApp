@@ -670,7 +670,7 @@ server<-function(input, output, session) {
         data_PCM<-data_PCM[data_PCM$`Feedthroat Temperature  F`>=input$PCMFT_min & data_PCM$`Feedthroat Temperature  F`<=input$PCMFT_max,]
       }
       if(input$PCMBZT1_min!=PCMBZT1min || input$PCMBZT1_max!=PCMBZT1max){
-        data_PCM<-data_PCM[data_PCM$`Barrel Zone 1 Temperature  F`>=input$PCMBZT1_min & data_PCM$`Barrel Zone 1 Temperature  F`<=input$PCMBZT1_max,]
+        data_PCM<-data_PCM[data_PCM$'Part Number' %in%  unique(data_PCM$'Part Number'[data_PCM$`Barrel Zone 1 Temperature  F`>=input$PCMBZT1_min & data_PCM$`Barrel Zone 1 Temperature  F`<=input$PCMBZT1_max]),]
       }
       if(input$PCMBZT2_min!=PCMBZT2min || input$PCMBZT2_max!=PCMBZT2max){
         data_PCM<-data_PCM[data_PCM$`Barrel Zone 2 Temperature  F`>=input$PCMBZT2_min & data_PCM$`Barrel Zone 2 Temperature  F`<=input$PCMBZT2_max,]

@@ -287,7 +287,7 @@ ui<-fluidPage(
                                     
                                     
                                     fluidRow(
-                                      DT::dataTableOutput("mytable1")
+                                      DT::datatable("mytable1")
                                       )
                                     ),
                            
@@ -486,6 +486,9 @@ ui<-fluidPage(
                                                  tags$h2(strong("Length (in)", style="font-size:15px;")))),
                                       column(2,offset = 0,
                                              div(style = "height:35px;",
+                                                 tags$h2(strong("Total Length", style="font-size:15px;")))),
+                                      column(2,offset = 0,
+                                             div(style = "height:35px;",
                                                  tags$h2(strong("Perpendicularity (in)", style="font-size:15px;"))))
                                     ), 
                                     fluidRow(
@@ -503,8 +506,15 @@ ui<-fluidPage(
                                       column(1,style='padding:0px 5px 0px 0px;',
                                              uiOutput("PCMLength_max_input")),
                                       
+                                      column(1,style='padding:0px 0px 0px 5px ;',
+                                             uiOutput("PCMToLength_min_input")),
+                                      column(1,style='padding:0px 5px 0px 0px;',
+                                             uiOutput("PCMToLength_max_input")),
+                                      
                                       column(2,style='padding:0px;',
                                              uiOutput("PCMPPD_input"))
+
+                                      
                                     ),
                                     fluidRow(
                                       tags$h1(strong("Special"),style="font-size:25px;",align="left"),
