@@ -1,8 +1,15 @@
+#_d:id of the output of checkbox
+#_input: the name of the searchbox
+#PCS:Part Catalog--Single Extrusion PPS
+#PCM: Part Catalog--Multi Extrusion PPS
+#PCT: Part Catalog--Tapered Extrusion PPS
+
 server<-function(input,output,session){
   
   #Part Catalog--Sinlge Extrusion PPS Data
   
-  #Checkbox
+  #Single Extrusion PPS Data--Checkbox
+  #Part Resin
   output$PCSPN_s<-renderUI({
     checkboxInput("PCSPN_d","Part Number",value=TRUE)
   })
@@ -35,7 +42,7 @@ server<-function(input,output,session){
     checkboxInput("PCSSP_d","Screw Print",value=F)
   })
   
-  
+  #Processing Attribute
   output$PCSFT_s<-renderUI({
     checkboxInput("PCSFT_d","Feedthroat Temperature F",value=F)
   })
@@ -63,6 +70,7 @@ server<-function(input,output,session){
     checkboxInput("PCSDT2_d","Die 2 Temperature F",value=F)
   })
   
+  #Dimentional Attribute
   output$PCSIDI_s<-renderUI({
     checkboxInput("PCSIDI_d","Inner Diameter (in)",value=TRUE)
   })
@@ -75,9 +83,6 @@ server<-function(input,output,session){
   output$PCSOR_s<-renderUI({
     checkboxInput("PCSOR_d","Out of Roundness (in)",value=F)
   })
-  
-  
-  
   output$PCSCCT_s<-renderUI({
     checkboxInput("PCSCCT_d","Concentricity",value=F)
   })
@@ -88,7 +93,7 @@ server<-function(input,output,session){
     checkboxInput("PCSPPD_d","Perpendicularity (in)",value=F)
   })
   
-  
+  #Special Operation
   output$PCSNEXIV_s<-renderUI({
     checkboxInput("PCSNEXIV_d","NEXIV",value=F)
   })
@@ -128,7 +133,7 @@ server<-function(input,output,session){
   
   
   
-  #Search Box
+  #Single Extrusion PPS Data---Search Box
   
   #Part Resin
   output$PCSPN_input<-renderUI({
@@ -180,7 +185,7 @@ server<-function(input,output,session){
     selectInput("PCSSP",label = NULL,
                 c("All",unique(as.character(single_pps_data$`Screw Print`))))
   })
-  #Attributes_1
+  #Processing Attributes
   output$PCSFT_min_input<-renderUI({
     numericInput("PCSFT_min",label = NULL,value = PCSFTmin,step=1)
   })
@@ -206,7 +211,7 @@ server<-function(input,output,session){
     numericInput("PCSBZT3_max",label = NULL,value=PCSBZT3max,step=5)
   })
   
-  #Attrobites_2
+  #Attrobites
   output$PCSCT_min_input<-renderUI({
     numericInput("PCSCT_min",label = NULL,value=PCSCTmin,step=5)
   })
@@ -231,7 +236,7 @@ server<-function(input,output,session){
   output$PCSDT2_max_input<-renderUI({
     numericInput("PCSDT2_max",label = NULL,value=PCSDT2max,step=5)
   })
-  #Temps
+  #Dimentional Attribute
   output$PCSIDI_min_input<-renderUI({
     numericInput("PCSIDI_min",label = NULL,value=PCSIDImin,step=0.001)
   })
@@ -272,7 +277,7 @@ server<-function(input,output,session){
     selectInput("PCSPPD",label = NULL,
                 c("All",unique(as.character(single_pps_data$`Perpendicularity (in)`))))
   })
-  #Special_1
+  #Special Operation
   output$PCSNEXIV_input<-renderUI({
     selectInput("PCSNEXIV",label = NULL,choices=c("All","yes","NA"))
   })
@@ -291,7 +296,6 @@ server<-function(input,output,session){
   output$PCSHT_input<-renderUI({
     selectInput("PCSHT",label = NULL,choices=c("All","yes","NA"))
   })
-  #Special_2
   output$PCSSPD_input<-renderUI({
     selectInput("PCSSPD",label = NULL,choices=c("All","yes","NA"))
   })
@@ -311,6 +315,7 @@ server<-function(input,output,session){
     selectInput("PCSIRD",label = NULL,choices=c("All","yes","NA"))
   })
   
+  # obtain the output of checkbox from functions and make a list to store them----Single Extrusion PPS Data
   Col_PCS=c()
   show_vars1<-reactive({
     as.numeric(c(input$PCSPN_d,input$PCSPD_d,input$PCSRN_d,input$PCSRD_d,input$PCSPPSN_d,input$PCSDS_d,input$PCSDLL_d,input$PCSTS_d,input$PCSTLL_d,input$PCSSP_d,input$PCSFT_d,
@@ -319,6 +324,7 @@ server<-function(input,output,session){
                  input$PCSSPD_d,input$PCSSLD_d,input$PCSDLN_d,input$PCSULT_d,input$PCSVC_d,input$PCSIRD_d))})
 
 
+  # use all the input values from UI to modify table 1 and show the modified table
   output$mytable1 <- DT::renderDataTable({
     DT::datatable({
       col_var1=show_vars1()
@@ -403,6 +409,7 @@ server<-function(input,output,session){
         data_PCS<-data_PCS[data_PCS$`Length (in)`>=input$PCSLength_min & data_PCS$`Length (in)`<=input$PCSLength_max,]
       }
       
+    # For sepcial operation, it user choose yes or Na instead of All, then only the selected value will be showed
       if(input$PCSNEXIV!="All"){
         if(input$PCSNEXIV=="yes"){
           data_PCS<-data_PCS[data_PCS$`NEXIV`=="yes",]
@@ -651,9 +658,14 @@ server<-function(input,output,session){
     return(data)
   },
   filter = "top")
+  # end Single Extrusion PPS Data Server part and Shopping cart
+  
+  
+  
+  
+  
 
   #Part Catalog--multi Extrusion PPS Data
-  
   #Checkbox
   output$PCMPN_s<-renderUI({
     checkboxInput("PCMPN_d","Part Number",value=TRUE)
@@ -1446,7 +1458,6 @@ server<-function(input,output,session){
                  input$PCTPIDI_d,input$PCTPODI_d,input$PCTPWT_d,input$PCTPOR_d,input$PCTPCCT_d,
                  input$PCTDIDI_d,input$PCTDODI_d,input$PCTDWT_d,input$PCTDOR_d,input$PCTDCCT_d,
                  input$PCTPLength_d,input$PCTTLength_d,input$PCTDLength_d,input$PCTToLength_d,input$PCTPPD_d,
-                 
                  input$PCTNEXIV_d,input$PCTAnnealed_d,input$PCTCaliper_d,input$PCTOS_d,input$PCTMP_d,input$PCTHT_d,
                  input$PCTSPD_d,input$PCTSLD_d,input$PCTDLN_d,input$PCTULT_d,input$PCTVC_d,input$PCTIRD_d))})
   

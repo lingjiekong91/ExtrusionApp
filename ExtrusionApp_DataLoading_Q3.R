@@ -16,10 +16,10 @@ library(plyr)
 
 
 #Testing the appstats data
-test1 <- "C:/Users/kongl5/Desktop/Shiny/ExtrusionApp/R code/ExtrusionApp/wait to be modified/UI Data/AppStats Data_14986-01 LaserLinc.csv"
-test2 <- "C:/Users/kongl5/Desktop/Shiny/ExtrusionApp/R code/ExtrusionApp/wait to be modified/UI Data/AppStats Data_14986-01 Nexiv.csv"
-test3 <- "C:/Users/kongl5/Desktop/Shiny/ExtrusionApp/R code/ExtrusionApp/wait to be modified/UI Data/AppStats Data_14986-03 LaserLinc.csv"
-test4 <- "C:/Users/kongl5/Desktop/Shiny/ExtrusionApp/R code/ExtrusionApp/wait to be modified/UI Data/AppStats Data_14986-03 Nexiv.csv"
+test1 <- "C:/Users/kongl5/Desktop/Shiny/ExtrusionApp/data/UI Data/AppStats Data_14986-01 LaserLinc.csv"
+test2 <- "C:/Users/kongl5/Desktop/Shiny/ExtrusionApp/data/UI Data/AppStats Data_14986-01 Nexiv.csv"
+test3 <- "C:/Users/kongl5/Desktop/Shiny/ExtrusionApp/data/UI Data/AppStats Data_14986-03 LaserLinc.csv"
+test4 <- "C:/Users/kongl5/Desktop/Shiny/ExtrusionApp/data/UI Data/AppStats Data_14986-03 Nexiv.csv"
 ll1 <- read.csv(test1, header = TRUE, stringsAsFactors = FALSE, 
                 check.names = FALSE)
 n1 <- read.csv(test2, header = TRUE, stringsAsFactors = FALSE, 
@@ -31,7 +31,7 @@ n2 <- read.csv(test4, header = TRUE, stringsAsFactors = FALSE,
 
 
 #Creating variables across all sessions
-path <- "C:/Users/kongl5/Desktop/Shiny/ExtrusionApp/R code/ExtrusionApp/wait to be modified/UI Data"
+path <- "C:/Users/kongl5/Desktop/Shiny/ExtrusionApp/data/UI Data"
 single_pps_file <- "Single PPS Data Filled GTE.csv"
 #single_tari_file <- "Single Tari Data.csv"
 single_tari_file <- "MES Data_Single Tari Data.csv"
@@ -82,7 +82,7 @@ scrapcodes_data <- read.csv(scrapcode_filepath, header = TRUE, stringsAsFactors 
 
 
 
-#DATA CLEANING
+#DATA CLEANING For all Data Tables
 
 #Convert all char to numeric
 for (i in 6:9){
@@ -102,8 +102,6 @@ for (i in 22:32){
   multi_pps_data[,i]<-as.numeric(multi_pps_data[,i])
 }
 
-
-
 for (i in 6:9){
   tapered_pps_data[,i]<-as.numeric(tapered_pps_data[,i],na.rm=T)
 }
@@ -114,7 +112,7 @@ for (i in 11:33){
 
 
 #obtain min and max for all length and temperature from single,multi,tapered pps data
-single_pps_data[,25]<-as.numeric(single_pps_data[,25],na.rm=T)
+#Create blank matrix to store min and max
 single_pps_range=matrix(0,2,19)
 colnames(single_pps_range)<-c("DS","DLL","TS","TLL","FT","BZT1","BZT2","BZT3","CT","AT","DT1","DT2","IDI","ODI","WT","OR","CCT","Length","PPD")
 rownames(single_pps_range)<-c("min","max")
@@ -127,10 +125,10 @@ rownames(multi_pps_range)<-c("min","max")
 
 tapered_pps_range=matrix(0,2,27)
 rownames(tapered_pps_range)<-c("min","max")
-colnames(single_pps_range)<-c("DS","DLL","TS","TLL","FT","BZT1","BZT2","BZT3","CT","AT","DT1","DT2",
+colnames(tapered_pps_range)<-c("DS","DLL","TS","TLL","FT","BZT1","BZT2","BZT3","CT","AT","DT1","DT2",
                               "PIDI","PODI","PWT","POR","PCCT","DIDI","DODI","DWT","DOR","DCCT",
                               "PLength","TLength","DLength","ToLength","PPD")
-#single_pps_data
+#obtain min values and max values
 for (i in 1:4){
   single_pps_range[1,i]<-min(single_pps_data[,i+5],na.rm=T)
   single_pps_range[2,i]<-max(single_pps_data[,i+5],na.rm=T)
@@ -161,42 +159,6 @@ for (i in 5:27){
   tapered_pps_range[1,i]<-min(tapered_pps_data[,i+6],na.rm=T)
   tapered_pps_range[2,i]<-max(tapered_pps_data[,i+6],na.rm=T)
 }
-
-
-
-#convert NA to blank for all length and temperature values
-single_pps_data[is.na(single_pps_data)]<-""
-single_tari_data[is.na(single_tari_data)]<-""
-multi_pps_data[is.na(multi_pps_data)]<-""
-tapered_pps_data[is.na(tapered_pps_data)]<-""
-resin_data[is.na(resin_data)]<-""
-screw_data[is.na(screw_data)]<-""
-
-
-
-
-
-#Output--MES--get the start date from Start Time
-temp=as.data.frame(matrix(0,nrow=nrow(single_tari_data),ncol=2))
-colnames(temp)=c("Start Date","Start Time")
-temp[,1:2]=str_split_fixed(single_tari_data$`Start Time`,' ',2)
-temp[,1]=as.Date(temp[,1],"%m/%d/%Y",origin="1970-01-01")
-single_tari_data=cbind(single_tari_data[,1:which(colnames(single_tari_data)=="Start Time")-1],
-                       temp,single_tari_data[,(which(colnames(single_tari_data)=="Start Time")+1):ncol(single_tari_data)])
-
-
-
-Time_Start=sqldf("select Min([Start Date]) from single_tari_data")
-Time_Start<-as.numeric(Time_Start)
-Time_Start<-as.Date(Time_Start,origin="1970-01-01")
-Time_End<-sqldf("select Max([Start Date]) from single_tari_data")
-Time_End<-as.numeric(Time_End)
-Time_End<-as.Date(Time_End,origin="1970-01-01")
-
-
-
-
-
 
 
 #Get the range of all tabs---single Extrusion PPS DATA
@@ -262,10 +224,34 @@ PCTPLengthmin=tapered_pps_range[[1,23]];PCTPLengthmax=tapered_pps_range[[2,23]]
 PCTTLengthmin=tapered_pps_range[[1,24]];PCTTLengthmax=tapered_pps_range[[2,24]]
 PCTDLengthmin=tapered_pps_range[[1,25]];PCTDLengthmax=tapered_pps_range[[2,25]]
 PCTToLengthmin=tapered_pps_range[[1,26]];PCTToLengthmax=tapered_pps_range[[2,26]]
+#End obtaining Min value and Max Values
+
+#convert NA to blank for all length and temperature values
+single_pps_data[is.na(single_pps_data)]<-""
+single_tari_data[is.na(single_tari_data)]<-""
+multi_pps_data[is.na(multi_pps_data)]<-""
+tapered_pps_data[is.na(tapered_pps_data)]<-""
+resin_data[is.na(resin_data)]<-""
+screw_data[is.na(screw_data)]<-""
 
 
 
-#Single Extrusion PPS Data---Special Parameter---Change the blank to No
+#Output--MES--get the start date from Start Time
+temp=as.data.frame(matrix(0,nrow=nrow(single_tari_data),ncol=2))
+colnames(temp)=c("Start Date","Start Time")
+temp[,1:2]=str_split_fixed(single_tari_data$`Start Time`,' ',2)
+temp[,1]=as.Date(temp[,1],"%m/%d/%Y",origin="1970-01-01")
+single_tari_data=cbind(single_tari_data[,1:which(colnames(single_tari_data)=="Start Time")-1],
+                       temp,single_tari_data[,(which(colnames(single_tari_data)=="Start Time")+1):ncol(single_tari_data)])
+Time_Start=sqldf("select Min([Start Date]) from single_tari_data")
+Time_Start<-as.numeric(Time_Start)
+Time_Start<-as.Date(Time_Start,origin="1970-01-01")
+Time_End<-sqldf("select Max([Start Date]) from single_tari_data")
+Time_End<-as.numeric(Time_End)
+Time_End<-as.Date(Time_End,origin="1970-01-01")
+
+
+
 
 #Catalog--Multi Extrusion PPS Table---Fill the Partnumber and PPS number for each single row in the table
 for (i in 1:nrow(multi_pps_data)){
@@ -276,15 +262,4 @@ for (i in 1:nrow(multi_pps_data)){
     multi_pps_data[i,"PPS Number"]=multi_pps_data[i-1,"PPS Number"]
   }
 }
-#Special Parameter---use NA to replace blank
 
-
-
-
-
-
-
-#display all rows which share the same partnumbers where the parameter meets the requirements
-temp=sqldf("select * from multi_pps_data where multi_pps_data.[Part Number] in 
-           (select [Part Number] from multi_pps_data 
-           where [Barrel Zone 1 Temperature  F]=345)")
