@@ -18,18 +18,18 @@ library(sqldf)
 
 ui<-navbarPage("Extrusion Application",
                
-               navbarMenu("Part Catalog",
+               navbarMenu("Part Catalog",   #Create a dropdown list named as Part Catalog containing of Single, Multi,and Tapered
                           #Single Extrusion PPS Data
                           tabPanel("Single Extrusion PPS Data",
                                    #Part Resin
                                    fluidRow(
-                                     tags$h1(strong("Part Resin"),style="font-size:25px;",align="left"),
+                                     tags$h1(strong("Part Resin"),style="font-size:25px;",align="left"), #Use tag to add a hearder 
                                      #Part Number
                                      column(2,
-                                             fluidRow(uiOutput("PCSPN_s")),
+                                             fluidRow(uiOutput("PCSPN_s")),  #Show the checkbox for Part number. it will return a True/False value
                                              fluidRow(
                                                conditionalPanel(
-                                                 condition="input.PCSPN_d",
+                                                 condition="input.PCSPN_d",   #If it were Ture, then there will have a search box for Part Number under checkbox
                                                  uiOutput("PCSPN_input")
                                                  ))),
                                      # Part Description

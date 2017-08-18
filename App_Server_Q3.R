@@ -334,6 +334,7 @@ server<-function(input,output,session){
         }
       } 
       data_PCS<-single_pps_data[,Col_PCS]
+      
       if(input$PCSPN!="All"){
         data_PCS<-data_PCS[data_PCS$`Part Number`==input$PCSPN,]
       }
@@ -494,174 +495,7 @@ server<-function(input,output,session){
           data_PCS<-data_PCS[data_PCS$`Irradiated`=="",]
         }
       }
-      
-      ##The next lines add a first column that contains buttons to add parts to the shopping cart
-      rows <- nrow(data_PCS)
-      vectorofbuttons <- c(rep(0, rows))
-      row_count <- 1
-      
-      while(row_count < rows + 1){
-        #this creates a vector of html action buttons to add to the table
-        vectorofbuttons[row_count] <- as.character(
-          actionButton(inputId = paste0("button_", data_PCS[row_count,1]),
-                       label = "Add Part",
-                       onclick = 'Shiny.onInputChange(\"add_button\",  this.id)')
-        )
-        row_count <- row_count + 1
-      } #end while adding the html stuff
-      
-      data_PCS$"" <- vectorofbuttons
-      data_PCS <- data_PCS[,c(ncol(data_PCS), 1:(ncol(data_PCS)-1))]
-      return(data_PCS)
-      }
-    )
-  },
-  options = list(orderClasses = TRUE,
-                 columnDefs = list(list(className = 'dt-center',
-                                        targets = "_all"
-                 )
-                 ),
-                 scrollX=TRUE,
-                 scrollY=500,
-                 autoWidth=TRUE),
-  filter = "top",
-  rownames = FALSE, 
-  escape = FALSE, #escape allows for html elements to be rendered in the table
-  server = FALSE) #end Single Extrusion PPS Data
-  
-  shoppingcart <- reactiveValues(
-    #this is a shopping cart to hold all the parts and SAP batches that a user wants.
-    #this is linked to the output data, so only the output data located of the associated batches 
-    #in the shopping cart is displayed
-                                  data = data.frame("Part" = numeric(0), "Delete Part" = numeric(0),
-                                                   "SAP Batch" = numeric(0), "Delete Batch" = numeric(0),
-                                                   stringsAsFactors = FALSE,
-                                                   check.names = FALSE))
-  
-  observeEvent(input$add_button,{
-    #this observes whether the user clicked a button to add a part to the shopping cart
-    #get the part
-    part <- strsplit(input$add_button, "_")[[1]][2]
-    
-    #Action button to delete part
-    deletepart <- as.character(
-      actionButton(inputId = paste0("button_", part),
-                   label = "Delete Part",
-                   onclick = 'Shiny.onInputChange(\"delete_part_button\",  this.id)'))
-    
-    #Get the SAP batches
-    SAP_batches <- tari_parameter_data$`SAP Batch Number`[tari_parameter_data$`Material Number` == part]
-    numberofbatches <- length(SAP_batches)
-    
-    #Action button to delete batch
-    batch_count <- 1
-    vectorofbuttons <- c(rep(0, length(SAP_batches)))
-    
-    while(batch_count < length(SAP_batches) + 1){
-      vectorofbuttons[batch_count] <- as.character(
-        actionButton(inputId = paste0("button_", SAP_batches[batch_count]),
-                     label = "Delete Batch",
-                     onclick = 'Shiny.onInputChange(\"delete_batch_button\",  this.id)'))
-      batch_count <- batch_count + 1
-    }
-    
-    #Vectors of parts and buttons
-    partvector <- rep(part, numberofbatches)
-    deletepartvector <- rep(deletepart, numberofbatches)
-    
-    new_data <- cbind(partvector, deletepartvector, SAP_batches, vectorofbuttons)
-    
-    colnames(new_data) <- c("Part", "Delete Part", "SAP Batch", "Delete Batch")
-    shoppingcart$data <- rbind(shoppingcart$data, new_data, stringsAsFactors = FALSE)
-    colnames(shoppingcart$data) <- c("Part", "Delete Part", "SAP Batch", "Delete Batch")
-  }
-  )
-  
-  
-  observeEvent(input$delete_part_button,{
-    #'this observes whether a person deleted a part from the shopping cart. If the button is clicked
-    #'all batches associated to the part are removed
-    part <- strsplit(input$delete_part_button, "_")[[1]][2]
-    shoppingcart$data <- shoppingcart$data[shoppingcart$data$'Part' != part,]
-  })
-  
-  observeEvent(input$delete_batch_button,{
-    #'this observes whether a person deleted a SAP batch from the shopping cart. If the button is
-    #'clicked, the batch is removed from the cart
-    batch <- strsplit(input$delete_batch_button, "_")[[1]][2]
-    shoppingcart$data <- shoppingcart$data[shoppingcart$data$'SAP Batch' != batch,]
-  })
-  
-
-  output$shoppingcart <- renderDataTable(
-    #'this shopping cart allows a user to select parts and batches they want to examine. Once added
-    #'to the cart, they can view all the MES, SAP, and AppStats data
-                                        shoppingcart$data,
-                                        filter = "top",
-                                        rownames = FALSE,
-                                        escape = FALSE,
-                                        server = FALSE) #for the shoppingcart
-
-  output$MESparameters <- renderDataTable({
-    #This returns the table of the MES paramters and SAP yields times based on the SAP batch numbers 
-    #in the shopping cart
-    data <- tari_parameter_data[tari_parameter_data$`SAP Batch Number` %in% shoppingcart$data$'SAP Batch',]
-    return(data)
-    },
-    filter = "top")
-  
-  output$MEStime <- renderDataTable({
-    #This returns the table of the MES input times based on the SAP batch numbers in the
-    #shopping cart
-    data <- tari_time_data[tari_time_data$`SAP Batch Number` %in% shoppingcart$data$'SAP Batch',]
-    return(data)
-    },
-    filter = "top")
-  
-  output$MESsubmitter <- renderDataTable({
-    #This returns the table of the MES submitter IDs based on the SAP batch numbers in the
-    #shopping cart
-    data <- tari_submitter_data[tari_submitter_data$`SAP Batch Number` %in% shoppingcart$data$'SAP Batch',]
-    return(data)
-  },
-  filter = "top")
-  
-  output$MEStotal <- renderDataTable({
-    #This returns the table of all MES inputs based on the SAP batch numbers in the
-    #shopping cart
-    data <- tari_total_data[tari_total_data$`SAP Batch Number` %in% shoppingcart$data$'SAP Batch',]
-    return(data)
-    },
-    filter = "top")
-  
-  output$scrapcodes <- renderDataTable({
-    #This returns the table of SAP scrap codes based on the SAP batch numbers in the
-    #shopping cart
-    data <- scrapcodes_data[scrapcodes_data$Order %in% shoppingcart$data$'SAP Batch',]
-    return(data)
-    },
-    filter = "top")
-  
-  #Testing the appstats data
-  output$nexiv <- renderDataTable({
-    #This returns the table of the Applied Stats Nexiv Data based on the SAP batch numbers in the
-    #shopping cart
-    data <- nexiv[nexiv$`Batch #` %in% shoppingcart$data$'SAP Batch',]
-    return(data)
-  },
-  filter = "top")
-  
-  output$laserlinc <- renderDataTable({
-    #This returns the table of the Applied Stats laserlinc data based on the SAP batch numbers in the
-    #shopping cart
-    data <- ll[ll$`Lot Number` %in% shoppingcart$data$'SAP Batch',]
-    return(data)
-  },
-  filter = "top")
-  # end Single Extrusion PPS Data Server part and Shopping cart
-  
-  
-  
+     
   
   
 
@@ -1486,6 +1320,179 @@ server<-function(input,output,session){
     )
   },
   filter = "top") #end Tapered Extrusion PPS Data
+  
+
+  output$MESparameters <- renderDataTable({
+    #This returns the table of the MES paramters and SAP yields times based on the SAP batch numbers 
+    #in the shopping cart
+    data <- tari_parameter_data[tari_parameter_data$`SAP Batch Number` %in% shoppingcart$data$'SAP Batch',]
+    return(data)
+  },
+  filter = "top")
+  
+  output$MEStime <- renderDataTable({
+    #This returns the table of the MES input times based on the SAP batch numbers in the
+    #shopping cart
+    data <- tari_time_data[tari_time_data$`SAP Batch Number` %in% shoppingcart$data$'SAP Batch',]
+    return(data)
+  },
+  filter = "top")
+  
+  output$MESsubmitter <- renderDataTable({
+    #This returns the table of the MES submitter IDs based on the SAP batch numbers in the
+    #shopping cart
+    data <- tari_submitter_data[tari_submitter_data$`SAP Batch Number` %in% shoppingcart$data$'SAP Batch',]
+    return(data)
+  },
+  filter = "top")
+  
+  output$MEStotal <- renderDataTable({
+    #This returns the table of all MES inputs based on the SAP batch numbers in the
+    #shopping cart
+    data <- tari_total_data[tari_total_data$`SAP Batch Number` %in% shoppingcart$data$'SAP Batch',]
+    return(data)
+  },
+  filter = "top")
+  
+  output$scrapcodes <- renderDataTable({
+    #This returns the table of SAP scrap codes based on the SAP batch numbers in the
+    #shopping cart
+    data <- scrapcodes_data[scrapcodes_data$Order %in% shoppingcart$data$'SAP Batch',]
+    return(data)
+  },
+  filter = "top")
+  
+  #Testing the appstats data
+  output$nexiv <- renderDataTable({
+    #This returns the table of the Applied Stats Nexiv Data based on the SAP batch numbers in the
+    #shopping cart
+    data <- nexiv[nexiv$`Batch #` %in% shoppingcart$data$'SAP Batch',]
+    return(data)
+  },
+  filter = "top")
+  
+  output$laserlinc <- renderDataTable({
+    #This returns the table of the Applied Stats laserlinc data based on the SAP batch numbers in the
+    #shopping cart
+    data <- ll[ll$`Lot Number` %in% shoppingcart$data$'SAP Batch',]
+    return(data)
+  },
+  filter = "top")
+  # end Single Extrusion PPS Data Server part and Shopping cart
+  
+  
+  
+  
+  
+  
+  
+  #*******************The next lines add a first column that contains buttons to add parts to the shopping cart****************
+  rows <- nrow(data_PCS)
+  vectorofbuttons <- c(rep(0, rows))
+  row_count <- 1
+  
+  while(row_count < rows + 1){
+    #this creates a vector of html action buttons to add to the table
+    vectorofbuttons[row_count] <- as.character(
+      actionButton(inputId = paste0("button_", data_PCS[row_count,1]),
+                   label = "Add Part",
+                   onclick = 'Shiny.onInputChange(\"add_button\",  this.id)')
+    )
+    row_count <- row_count + 1
+  } #end while adding the html stuff
+  
+  data_PCS$"" <- vectorofbuttons
+  data_PCS <- data_PCS[,c(ncol(data_PCS), 1:(ncol(data_PCS)-1))]
+  return(data_PCS)
+    }
+    )
+  },
+  options = list(orderClasses = TRUE,
+                 columnDefs = list(list(className = 'dt-center',
+                                        targets = "_all"
+                 )
+                 ),
+                 scrollX=TRUE,
+                 scrollY=500,
+                 autoWidth=TRUE),
+  filter = "top",
+  rownames = FALSE, 
+  escape = FALSE, #escape allows for html elements to be rendered in the table
+  server = FALSE) #end Single Extrusion PPS Data
+  
+  shoppingcart <- reactiveValues(
+    #this is a shopping cart to hold all the parts and SAP batches that a user wants.
+    #this is linked to the output data, so only the output data located of the associated batches 
+    #in the shopping cart is displayed
+    data = data.frame("Part" = numeric(0), "Delete Part" = numeric(0),
+                      "SAP Batch" = numeric(0), "Delete Batch" = numeric(0),
+                      stringsAsFactors = FALSE,
+                      check.names = FALSE))
+  
+  observeEvent(input$add_button,{
+    #this observes whether the user clicked a button to add a part to the shopping cart
+    #get the part
+    part <- strsplit(input$add_button, "_")[[1]][2]
+    
+    #Action button to delete part
+    deletepart <- as.character(
+      actionButton(inputId = paste0("button_", part),
+                   label = "Delete Part",
+                   onclick = 'Shiny.onInputChange(\"delete_part_button\",  this.id)'))
+    
+    #Get the SAP batches
+    SAP_batches <- tari_parameter_data$`SAP Batch Number`[tari_parameter_data$`Material Number` == part]
+    numberofbatches <- length(SAP_batches)
+    
+    #Action button to delete batch
+    batch_count <- 1
+    vectorofbuttons <- c(rep(0, length(SAP_batches)))
+    
+    while(batch_count < length(SAP_batches) + 1){
+      vectorofbuttons[batch_count] <- as.character(
+        actionButton(inputId = paste0("button_", SAP_batches[batch_count]),
+                     label = "Delete Batch",
+                     onclick = 'Shiny.onInputChange(\"delete_batch_button\",  this.id)'))
+      batch_count <- batch_count + 1
+    }
+    
+    #Vectors of parts and buttons
+    partvector <- rep(part, numberofbatches)
+    deletepartvector <- rep(deletepart, numberofbatches)
+    
+    new_data <- cbind(partvector, deletepartvector, SAP_batches, vectorofbuttons)
+    
+    colnames(new_data) <- c("Part", "Delete Part", "SAP Batch", "Delete Batch")
+    shoppingcart$data <- rbind(shoppingcart$data, new_data, stringsAsFactors = FALSE)
+    colnames(shoppingcart$data) <- c("Part", "Delete Part", "SAP Batch", "Delete Batch")
+  }
+  )
+  
+  
+  observeEvent(input$delete_part_button,{
+    #'this observes whether a person deleted a part from the shopping cart. If the button is clicked
+    #'all batches associated to the part are removed
+    part <- strsplit(input$delete_part_button, "_")[[1]][2]
+    shoppingcart$data <- shoppingcart$data[shoppingcart$data$'Part' != part,]
+  })
+  
+  observeEvent(input$delete_batch_button,{
+    #'this observes whether a person deleted a SAP batch from the shopping cart. If the button is
+    #'clicked, the batch is removed from the cart
+    batch <- strsplit(input$delete_batch_button, "_")[[1]][2]
+    shoppingcart$data <- shoppingcart$data[shoppingcart$data$'SAP Batch' != batch,]
+  })
+  
+  
+  output$shoppingcart <- renderDataTable(
+    #'this shopping cart allows a user to select parts and batches they want to examine. Once added
+    #'to the cart, they can view all the MES, SAP, and AppStats data
+    shoppingcart$data,
+    filter = "top",
+    rownames = FALSE,
+    escape = FALSE,
+    server = FALSE) #for the shoppingcart
+  
 
 }
 
