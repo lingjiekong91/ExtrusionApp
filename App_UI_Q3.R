@@ -7,6 +7,8 @@ library(stringr)
 library(gsubfn)
 library(proto)
 library(sqldf)
+
+
 #_s:name of the checkbox
 #_d:id of the output of checkbox
 #_input: the name of the searchbox
@@ -16,18 +18,18 @@ library(sqldf)
 
 ui<-navbarPage("Extrusion Application",
                
-               navbarMenu("Part Catalog",
+               navbarMenu("Part Catalog",   #Create a dropdown list named as Part Catalog containing of Single, Multi,and Tapered
                           #Single Extrusion PPS Data
                           tabPanel("Single Extrusion PPS Data",
                                    #Part Resin
                                    fluidRow(
-                                     tags$h1(strong("Part Resin"),style="font-size:25px;",align="left"),
+                                     tags$h1(strong("Part Resin"),style="font-size:25px;",align="left"), #Use tag to add a hearder 
                                      #Part Number
                                      column(2,
-                                             fluidRow(uiOutput("PCSPN_s")),
+                                             fluidRow(uiOutput("PCSPN_s")),  #Show the checkbox for Part number. it will return a True/False value
                                              fluidRow(
                                                conditionalPanel(
-                                                 condition="input.PCSPN_d",
+                                                 condition="input.PCSPN_d",   #If it were Ture, then there will have a search box for Part Number under checkbox
                                                  uiOutput("PCSPN_input")
                                                  ))),
                                      # Part Description
@@ -156,8 +158,7 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCSBZT1_d",
                                                        uiOutput("PCSBZT1_max_input")
-                                                     )
-                                              ))),
+                                                     )))),
                                      #Barrel ZOne2
                                      column(3,
                                             fluidRow(uiOutput("PCSBZT2_s")),
@@ -172,8 +173,7 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCSBZT2_d",
                                                        uiOutput("PCSBZT2_max_input")
-                                                     )
-                                              ))),
+                                                     )))),
                                      #Barrel Zone3
                                      column(3,
                                             fluidRow(uiOutput("PCSBZT3_s")),
@@ -188,10 +188,10 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCSBZT3_d",
                                                        uiOutput("PCSBZT3_max_input")
-                                                     )
-                                              )))
+                                                     ))))
                                    ),#end Processing Attribute 1
                                    fluidRow(
+                                     #Clamp Temperature F
                                      column(3,
                                             fluidRow(uiOutput("PCSCT_s")),
                                             fluidRow(
@@ -205,8 +205,8 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCSCT_d",
                                                        uiOutput("PCSCT_max_input")
-                                                     )
-                                              ))),
+                                                     )))),
+                                     #Adapter Temperature F
                                      column(3,
                                             fluidRow(uiOutput("PCSAT_s")),
                                             fluidRow(
@@ -220,8 +220,8 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCSAT_d",
                                                        uiOutput("PCSAT_max_input")
-                                                     )
-                                              ))),
+                                                     )))),
+                                     #Die 1 Temperature F
                                      column(3,
                                             fluidRow(uiOutput("PCSDT1_s")),
                                             fluidRow(
@@ -235,8 +235,8 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCSDT1_d",
                                                        uiOutput("PCSDT1_max_input")
-                                                     )
-                                              ))),
+                                                     )))),
+                                     #Die 2 Temperature F
                                      column(3,
                                             fluidRow(uiOutput("PCSDT2_s")),
                                             fluidRow(
@@ -250,11 +250,12 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCSDT2_d",
                                                        uiOutput("PCSDT2_max_input")
-                                                     )
-                                              )))), #end Processing Attribute 2
+                                                     ))))), #end Processing Attribute 
+                                   
                                    #Dimentional Attribute
                                    fluidRow(
                                      tags$h1(strong("Dimentional Attribute"),style="font-size:25px;",align="left"),
+                                     #Inner Diameter
                                      column(3,
                                             fluidRow(uiOutput("PCSIDI_s")),
                                             fluidRow(
@@ -268,8 +269,8 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCSIDI_d",
                                                        uiOutput("PCSIDI_max_input")
-                                                     )
-                                              ))),
+                                                     )))),
+                                     #Outer Diameter
                                      column(3,
                                             fluidRow(uiOutput("PCSODI_s")),
                                             fluidRow(
@@ -283,8 +284,8 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCSODI_d",
                                                        uiOutput("PCSODI_max_input")
-                                                     )
-                                              ))),
+                                                     )))),
+                                     #Wall Thickness
                                      column(3,
                                             fluidRow(uiOutput("PCSWT_s")),
                                             fluidRow(
@@ -298,8 +299,8 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCSWT_d",
                                                        uiOutput("PCSWT_max_input")
-                                                     )
-                                              ))),
+                                                     )))),
+                                     #Out of Roundness (in)
                                      column(3,
                                             fluidRow(uiOutput("PCSOR_s")),
                                             fluidRow(
@@ -313,10 +314,9 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCSOR_d",
                                                        uiOutput("PCSOR_max_input")
-                                                     )
-                                              )))
-                                   ), #end Dimentional Attribute 1
+                                                       ))))), 
                                    fluidRow(
+                                     #Concentricity
                                      column(3,
                                             fluidRow(uiOutput("PCSCCT_s")),
                                             fluidRow(
@@ -330,8 +330,8 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCSCCT_d",
                                                        uiOutput("PCSCCT_max_input")
-                                                     )
-                                              ))),
+                                                     )))),
+                                     #Length
                                      column(3,
                                             fluidRow(uiOutput("PCSLength_s")),
                                             fluidRow(
@@ -345,17 +345,16 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCSLength_d",
                                                        uiOutput("PCSLength_max_input")
-                                                     )
-                                              ))),
+                                                     )))),
+                                     #Perpendicularity
                                      column(3,
                                             fluidRow(uiOutput("PCSPPD_s")),
                                             fluidRow(
                                               conditionalPanel(
                                                 condition = "input.PCSPPD_d",
                                                 uiOutput("PCSPPD_input")
-                                              )))
-                                     
-                                   ),
+                                              )))), #End Dimentional Attribute
+                                   
                                    #Special Operation
                                    fluidRow(
                                      tags$h1(strong("Special Operation"),style="font-size:25px;",align="left"),
@@ -445,13 +444,12 @@ ui<-navbarPage("Extrusion Application",
                                               )))
                                    ), #end Special Operation
                                    
-                                   
-                                   
+                                   # Show Table
                                    fluidRow(
                                      DT::dataTableOutput("mytable1")
                                      )
                                    ),#end Single Extrusion PPS Data
-                          #multi Extrusion PPS Data
+                          #Multi Extrusion PPS Data---UI
                           tabPanel("Multi Extrusion PPS Data",
                                    #Part Resin
                                    fluidRow(
@@ -696,14 +694,12 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCMIDI_d",
                                                        uiOutput("PCMIDI_min_input")
-                                                     )
-                                              ),
+                                                     )),
                                               column(6,
                                                      conditionalPanel(
                                                        condition = "input.PCMIDI_d",
                                                        uiOutput("PCMIDI_max_input")
-                                                     )
-                                              ))),
+                                                     )))),
                                      column(2,
                                             fluidRow(uiOutput("PCMODI_s")),
                                             fluidRow(
@@ -711,14 +707,12 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCMODI_d",
                                                        uiOutput("PCMODI_min_input")
-                                                     )
-                                              ),
+                                                     )),
                                               column(6,
                                                      conditionalPanel(
                                                        condition = "input.PCMODI_d",
                                                        uiOutput("PCMODI_max_input")
-                                                     )
-                                              ))),
+                                                     )))),
                                      column(2,
                                             fluidRow(uiOutput("PCMIWT_s")),
                                             fluidRow(
@@ -726,14 +720,12 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCMIWT_d",
                                                        uiOutput("PCMIWT_min_input")
-                                                     )
-                                              ),
+                                                     )),
                                               column(6,
                                                      conditionalPanel(
                                                        condition = "input.PCMIWT_d",
                                                        uiOutput("PCMIWT_max_input")
-                                                     )
-                                              ))),
+                                                     )))),
                                      column(2,
                                             fluidRow(uiOutput("PCMMWT_s")),
                                             fluidRow(
@@ -741,14 +733,12 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCMMWT_d",
                                                        uiOutput("PCMMWT_min_input")
-                                                     )
-                                              ),
+                                                     )),
                                               column(6,
                                                      conditionalPanel(
                                                        condition = "input.PCMMWT_d",
                                                        uiOutput("PCMMWT_max_input")
-                                                     )
-                                              ))),
+                                                     )))),
                                      column(2,
                                             fluidRow(uiOutput("PCMOWT_s")),
                                             fluidRow(
@@ -756,14 +746,12 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCMOWT_d",
                                                        uiOutput("PCMOWT_min_input")
-                                                     )
-                                              ),
+                                                     )),
                                               column(6,
                                                      conditionalPanel(
                                                        condition = "input.PCMOWT_d",
                                                        uiOutput("PCMOWT_max_input")
-                                                     )
-                                              ))),
+                                                     )))),
                                      column(2,
                                             fluidRow(uiOutput("PCMTWT_s")),
                                             fluidRow(
@@ -771,16 +759,13 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCMTWT_d",
                                                        uiOutput("PCMTWT_min_input")
-                                                     )
-                                              ),
+                                                     )),
                                               column(6,
                                                      conditionalPanel(
                                                        condition = "input.PCMTWT_d",
                                                        uiOutput("PCMTWT_max_input")
-                                                     )
-                                              )))
-                                     
-                                   ), #end Dimentional Attribute 1
+                                                     ))))),
+                                   
                                    fluidRow(
                                      column(2,
                                             fluidRow(uiOutput("PCMOR_s")),
@@ -789,14 +774,12 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCMOR_d",
                                                        uiOutput("PCMOR_min_input")
-                                                     )
-                                              ),
+                                                     )),
                                               column(6,
                                                      conditionalPanel(
                                                        condition = "input.PCMOR_d",
                                                        uiOutput("PCMOR_max_input")
-                                                     )
-                                              ))),
+                                                     )))),
                                      column(2,
                                             fluidRow(uiOutput("PCMCCT_s")),
                                             fluidRow(
@@ -804,14 +787,12 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCMCCT_d",
                                                        uiOutput("PCMCCT_min_input")
-                                                     )
-                                              ),
+                                                     )),
                                               column(6,
                                                      conditionalPanel(
                                                        condition = "input.PCMCCT_d",
                                                        uiOutput("PCMCCT_max_input")
-                                                     )
-                                              ))),
+                                                     )))),
                                      column(2,
                                             fluidRow(uiOutput("PCMLength_s")),
                                             fluidRow(
@@ -819,14 +800,12 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCMLength_d",
                                                        uiOutput("PCMLength_min_input")
-                                                     )
-                                              ),
+                                                     )),
                                               column(6,
                                                      conditionalPanel(
                                                        condition = "input.PCMLength_d",
                                                        uiOutput("PCMLength_max_input")
-                                                     )
-                                              ))),
+                                                     )))),
                                      column(2,
                                             fluidRow(uiOutput("PCMToLength_s")),
                                             fluidRow(
@@ -834,14 +813,12 @@ ui<-navbarPage("Extrusion Application",
                                                      conditionalPanel(
                                                        condition = "input.PCMToLength_d",
                                                        uiOutput("PCMToLength_min_input")
-                                                     )
-                                              ),
+                                                     )),
                                               column(6,
                                                      conditionalPanel(
                                                        condition = "input.PCMToLength_d",
                                                        uiOutput("PCMToLength_max_input")
-                                                     )
-                                              ))),
+                                                     )))),
                                      
                                      column(2,
                                             fluidRow(uiOutput("PCMPPD_s")),
@@ -849,9 +826,8 @@ ui<-navbarPage("Extrusion Application",
                                               conditionalPanel(
                                                 condition = "input.PCMPPD_d",
                                                 uiOutput("PCMPPD_input")
-                                              )))
-                                     
-                                   ),
+                                              )))), #End Dimentional Attribute
+                                   
                                    #Special Operation
                                    fluidRow(
                                      tags$h1(strong("Special Operation"),style="font-size:25px;",align="left"),
@@ -945,6 +921,8 @@ ui<-navbarPage("Extrusion Application",
                                      DT::dataTableOutput("mytable2")
                                    )
                           ),#end multi Extrusion PPS Data
+                          
+                          #Tepered Extrusion PPS Data--UI
                           tabPanel("Tapered Extrusion PPS Data",
                                    #Part Resin
                                    fluidRow(
